@@ -36,7 +36,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
     double cx;
     double cy;
 
-    // UNITS ARE METERS
+    // UNITS ARE IN METERS
     double tagsize;
     double tagsizeX;
     double tagsizeY;
