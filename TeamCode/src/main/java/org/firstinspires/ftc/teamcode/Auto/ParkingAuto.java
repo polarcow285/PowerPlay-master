@@ -38,15 +38,12 @@ public class ParkingAuto extends LinearOpMode {
             }
             if (currentGamepad1.a && !previousGamepad1.a) {
                 isPathRed = !isPathRed;
-                //p = Path.Red;
             }
             if (currentGamepad1.b && !previousGamepad1.b) {
                 isSubstation = !isSubstation;
-                //p = Path.Red;
             }
             if (currentGamepad1.y && !previousGamepad1.y) {
                 isRightTile = !isRightTile;
-                //p = Path.Red;
             }
 
             if (isPathRed) {
@@ -80,21 +77,21 @@ public class ParkingAuto extends LinearOpMode {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
                     moveRight(1000);
-                    stop(1000);
+                    stop(500);
                 }
                 if (l == ParkingLocation.Terminal) {
                     moveLeft(1000);
-                    stop(1000);
+                    stop(500);
                 }
             }
             if (t == TileLocation.Right) {
                 if (l == ParkingLocation.Substation) {
                     moveLeft(1000);
-                    stop(1000);
+                    stop(500);
                 }
                 if (l == ParkingLocation.Terminal) {
                     moveRight(1000);
-                    stop(1000);
+                    stop(500);
                 }
             }
         }

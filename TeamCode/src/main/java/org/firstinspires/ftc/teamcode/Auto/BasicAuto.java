@@ -1,7 +1,7 @@
-
 package org.firstinspires.ftc.teamcode.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.AprilTagDetectionPipeline;
@@ -46,6 +46,7 @@ public class BasicAuto extends LinearOpMode
     public void runOpMode()
     {
         robot.init(hardwareMap);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -150,33 +151,26 @@ public class BasicAuto extends LinearOpMode
         }
 
         /* Actually do something useful */
-        if(tagOfInterest == null || tagOfInterest.id == LEFT){
+        if (tagOfInterest == null || tagOfInterest.id == LEFT)
+        {
             //trajectory for LEFT/DEFAULT
-            robot.frontleft.setPower(1);
-            robot.frontright.setPower(1);
-            sleep(500);
-            robot.frontleft.setPower(0);
-            robot.frontright.setPower(0);
-        } else if(tagOfInterest.id == MIDDLE){
-            //trajectory for MIDDLE
-            robot.frontleft.setPower(1);
-            robot.frontright.setPower(-1);
-            robot.backleft.setPower(1);
-            robot.backright.setPower(-1);
-            sleep(500);
-            robot.frontleft.setPower(0);
-            robot.frontright.setPower(0);
-            robot.backleft.setPower(0);
-            robot.backright.setPower(0);
-        }else{
-            //trajectory for RIGHT
-            robot.frontleft.setPower(-1);
-            robot.frontright.setPower(-1);
-            sleep(500);
-            robot.frontleft.setPower(0);
-            robot.frontright.setPower(0);
+            moveLeft(1000);
+            stop(200);
+            moveForwards(1000);
+            stop(500);
         }
-
+        else if (tagOfInterest.id == MIDDLE) {
+            //trajectory for MIDDLE
+            moveForwards(1000);
+            stop(500);
+        }
+        else {
+            //trajectory for RIGHT
+            moveRight(1000);
+            stop(200);
+            moveForwards(1000);
+            stop(500);
+        }
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending
          * DELETE FOR PROD*/
@@ -193,4 +187,63 @@ public class BasicAuto extends LinearOpMode
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
+
+
+    // Beautiful methods
+    public void moveForwards(int time){
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void moveRight(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void moveLeft(int time) {
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void moveBackwards(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void turnRight (int time){
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void turnLeft(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void stop(int time) {
+        robot.frontleft.setPower(0);
+        robot.frontright.setPower(0);
+        robot.backleft.setPower(0);
+        robot.backright.setPower(0);
+        sleep(time);
+    }
+
 }
