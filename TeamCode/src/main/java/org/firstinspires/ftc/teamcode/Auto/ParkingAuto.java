@@ -49,13 +49,6 @@ public class ParkingAuto extends LinearOpMode {
                 //p = Path.Red;
             }
 
-            /*if (currentGamepad1.y && !previousGamepad1.y) {
-                t = TileLocation.Right;
-            }
-            if (currentGamepad1.y && previousGamepad1.y) {
-                t = TileLocation.Left;
-            }
-            */
             if (isPathRed) {
                 p = Path.Red;
             }
@@ -72,8 +65,9 @@ public class ParkingAuto extends LinearOpMode {
                 t = TileLocation.Right;
             }
             else {
-                t = TileLocation.Left;;
+                t = TileLocation.Left;
             }
+
             telemetry.addData("Path", p);
             telemetry.addData("Parking Location", l);
             telemetry.addData("Tile Location", t);
@@ -85,106 +79,49 @@ public class ParkingAuto extends LinearOpMode {
         if (p == Path.Red) {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
-                    robot.frontleft.setPower(-1);
-                    robot.frontright.setPower(1);
-                    robot.backleft.setPower(1);
-                    robot.backright.setPower(-1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveRight(1000);
+                    stop(1000);
                 }
                 if (l == ParkingLocation.Terminal) {
-                    robot.frontleft.setPower(1);
-                    robot.frontright.setPower(-1);
-                    robot.backleft.setPower(-1);
-                    robot.backright.setPower(1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveLeft(1000);
+                    stop(1000);
                 }
             }
             if (t == TileLocation.Right) {
                 if (l == ParkingLocation.Substation) {
-                    robot.frontleft.setPower(1);
-                    robot.frontright.setPower(-1);
-                    robot.backleft.setPower(-1);
-                    robot.backright.setPower(1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
-
+                    moveLeft(1000);
+                    stop(1000);
                 }
                 if (l == ParkingLocation.Terminal) {
-                    robot.frontleft.setPower(-1);
-                    robot.frontright.setPower(1);
-                    robot.backleft.setPower(1);
-                    robot.backright.setPower(-1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveRight(1000);
+                    stop(1000);
                 }
             }
         }
         if (p == Path.Blue) {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
-                    robot.frontleft.setPower(-1);
-                    robot.frontright.setPower(1);
-                    robot.backleft.setPower(1);
-                    robot.backright.setPower(-1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveRight(1000);
+                    stop(1000);
                 }
                 if (l == ParkingLocation.Terminal) {
-                    robot.frontleft.setPower(1);
-                    robot.frontright.setPower(-1);
-                    robot.backleft.setPower(-1);
-                    robot.backright.setPower(1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveLeft(1000);
+                    stop(1000);
                 }
             }
             if (t == TileLocation.Right) {
                 if (l == ParkingLocation.Substation) {
-                    robot.frontleft.setPower(1);
-                    robot.frontright.setPower(-1);
-                    robot.backleft.setPower(-1);
-                    robot.backright.setPower(1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveLeft(1000);
+                    stop(1000);
                 }
                 if (l == ParkingLocation.Terminal) {
-                    robot.frontleft.setPower(-1);
-                    robot.frontright.setPower(1);
-                    robot.backleft.setPower(1);
-                    robot.backright.setPower(-1);
-                    sleep(1000);
-                    robot.frontleft.setPower(0);
-                    robot.frontright.setPower(0);
-                    robot.backleft.setPower(0);
-                    robot.backright.setPower(0);
+                    moveRight(1000);
+                    stop(1000);
                 }
             }
         }
-
     }
+
     enum Path {
         Red,
         Blue
@@ -196,5 +133,60 @@ public class ParkingAuto extends LinearOpMode {
     enum TileLocation {
         Right,
         Left
+    }
+    public void moveForwards(int time){
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void moveRight(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void moveLeft(int time) {
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void moveBackwards(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void turnRight (int time){
+        robot.frontleft.setPower(1);
+        robot.frontright.setPower(-1);
+        robot.backleft.setPower(1);
+        robot.backright.setPower(-1);
+        sleep(time);
+    }
+
+    public void turnLeft(int time){
+        robot.frontleft.setPower(-1);
+        robot.frontright.setPower(1);
+        robot.backleft.setPower(-1);
+        robot.backright.setPower(1);
+        sleep(time);
+    }
+
+    public void stop(int time) {
+        robot.frontleft.setPower(0);
+        robot.frontright.setPower(0);
+        robot.backleft.setPower(0);
+        robot.backright.setPower(0);
+        sleep(time);
     }
 }
