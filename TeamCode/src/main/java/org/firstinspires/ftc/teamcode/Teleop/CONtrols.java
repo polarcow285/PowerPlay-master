@@ -13,8 +13,14 @@ public class CONtrols extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
-        waitForStart();
 
+        telemetry.setAutoClear(true);
+        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+
+        int liftTarget = 0;
+        double liftSpeed = 0;
+        String liftCurrentDirection = "up";
+        waitForStart();
 
         while (opModeIsActive()) {
             //Driving controls
@@ -46,6 +52,62 @@ public class CONtrols extends LinearOpMode {
             robot.backleft.setPower(backLeftPower);
             robot.frontright.setPower(frontRightPower);
             robot.backright.setPower(backRightPower);
+
+            // lift code
+
+            if (robot.lift.getCurrentPosition()>-2000 && gamepad1.x) { // Arm UP
+                liftTarget = -2000;
+                liftSpeed = 0.98;
+                liftCurrentDirection = "up";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()<-2000 && gamepad1.x) { // Arm UP
+                liftTarget = -2000;
+                liftSpeed = -0.98;
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()>-3500 && gamepad1.a) { // Arm UP
+                liftTarget = -3500;
+                liftSpeed = 0.98;
+                liftCurrentDirection = "up";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()<-3500 && gamepad1.a) { // Arm UP
+                liftTarget = -3500;
+                liftSpeed = -0.98;
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            } else if (gamepad1.b){ // Arm DOWN
+                liftTarget = 0;
+                liftSpeed = -0.98;  // From my research, negative is ignore, so I don't understand why this *seemed* to work
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }
+
+            // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
+//            if ( liftCurrentDirection == "down" && ( lift.getTargetPosition() < 5 ) ){
+//                liftSpeed = 0;
+//                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            }
+
+            /** END ARM LIFT **/
+
+
+            idle();
+
+            // Arm Lift Telemetry
+            if(robot.lift.isBusy() ){
+                telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
 
             telemetry.addData("frontLeftPower", frontLeftPower);
             telemetry.addData("frontRightPower", frontRightPower);
