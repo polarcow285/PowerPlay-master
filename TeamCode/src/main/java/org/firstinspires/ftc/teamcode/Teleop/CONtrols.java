@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @TeleOp(name="CONtrols", group="Mecanum")
 public class CONtrols extends LinearOpMode {
     private ProjectUdon robot = new ProjectUdon();
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,9 +23,20 @@ public class CONtrols extends LinearOpMode {
         int liftTarget = 0;
         double liftSpeed = 0;
         String liftCurrentDirection = "up";
+        boolean rollerForwardToggle = false;
+        boolean rollerBackwardToggle = false;
+
         waitForStart();
 
         while (opModeIsActive()) {
+
+            try {
+                previousGamepad2.copy(currentGamepad2);
+                currentGamepad2.copy(gamepad2);
+            }
+            catch (RobotCoreException e) {
+
+            }
             //Driving controls
 
             double y = 0; //back and forth
@@ -53,37 +67,59 @@ public class CONtrols extends LinearOpMode {
             robot.frontright.setPower(frontRightPower);
             robot.backright.setPower(backRightPower);
 
+            // roller code
+            if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+                rollerForwardToggle = !rollerForwardToggle;
+            }
+            if (rollerForwardToggle) {
+                robot.roller.setPower(1);
+            }
+            else {
+                robot.roller.setPower(0);
+            }
+
+            if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+                rollerBackwardToggle = !rollerBackwardToggle;
+            }
+            if (rollerBackwardToggle) {
+                robot.roller.setPower(-1);
+            }
+            else {
+                robot.roller.setPower(0);
+            }
+
+
             // lift code
 
-            if (robot.lift.getCurrentPosition()>-2000 && gamepad1.x) { // Arm UP
+            if (robot.lift.getCurrentPosition()>-2000 && gamepad2.x) { // Arm UP
                 liftTarget = -2000;
                 liftSpeed = 0.98;
                 liftCurrentDirection = "up";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<-2000 && gamepad1.x) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()<-2000 && gamepad2.x) { // Arm UP
                 liftTarget = -2000;
                 liftSpeed = -0.98;
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()>-3500 && gamepad1.a) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()>-3500 && gamepad2.y) { // Arm UP
                 liftTarget = -3500;
                 liftSpeed = 0.98;
                 liftCurrentDirection = "up";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<-3500 && gamepad1.a) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()<-3500 && gamepad2.y) { // Arm UP
                 liftTarget = -3500;
                 liftSpeed = -0.98;
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            } else if (gamepad1.b){ // Arm DOWN
+            } else if (gamepad2.a){ // Arm DOWN
                 liftTarget = 0;
                 liftSpeed = -0.98;  // From my research, negative is ignore, so I don't understand why this *seemed* to work
                 liftCurrentDirection = "down";
