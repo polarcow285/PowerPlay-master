@@ -98,22 +98,36 @@ public class CONtrols extends LinearOpMode {
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<-2000 && gamepad2.x) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()<-2000 && gamepad2.x) { // Arm DOWN
                 liftTarget = -2000;
                 liftSpeed = -0.98;
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()>-3500 && gamepad2.y) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()>-3500 && gamepad2.b) { // Arm UP
                 liftTarget = -3500;
                 liftSpeed = 0.98;
                 liftCurrentDirection = "up";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<-3500 && gamepad2.y) { // Arm UP
+            }else if (robot.lift.getCurrentPosition()<-3500 && gamepad2.b) { // Arm DOWN
                 liftTarget = -3500;
+                liftSpeed = -0.98;
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()>-4200 && gamepad2.y) { // Arm UP
+                liftTarget = -4200;
+                liftSpeed = 0.98;
+                liftCurrentDirection = "up";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()<-4200 && gamepad2.y) { // Arm DOWN
+                liftTarget = -4200;
                 liftSpeed = -0.98;
                 liftCurrentDirection = "down";
 
