@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 
 //name that appears on the driver hub screen
-@Autonomous(name = "EnumTest")
+@Autonomous(name = "ParkingAuto")
 public class ParkingAuto extends LinearOpMode {
     //making a robot from project file (hardware map)
     public ProjectUdon robot = new ProjectUdon();

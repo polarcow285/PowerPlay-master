@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auto;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
-@TeleOp
+@Autonomous
 public class BasicAuto extends LinearOpMode
 {
     public ProjectUdon robot = new ProjectUdon();
