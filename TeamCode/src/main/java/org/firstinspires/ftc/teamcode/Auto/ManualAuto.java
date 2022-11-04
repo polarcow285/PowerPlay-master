@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
-@Autonomous
+@Autonomous(name="Manual Auto")
 public class ManualAuto extends LinearOpMode
 {
     public ProjectUdon robot = new ProjectUdon();
