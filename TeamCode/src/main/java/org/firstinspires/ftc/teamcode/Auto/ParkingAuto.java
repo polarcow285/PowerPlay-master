@@ -72,7 +72,9 @@ public class ParkingAuto extends LinearOpMode {
         }
 
         waitForStart();
+        moveForwards(2500);
         //autonomous happens here
+        /*
         if (p == Path.Red) {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
@@ -116,7 +118,10 @@ public class ParkingAuto extends LinearOpMode {
                     stop(1000);
                 }
             }
+
+
         }
+        */
     }
 
     enum Path {
@@ -132,10 +137,10 @@ public class ParkingAuto extends LinearOpMode {
         Left
     }
     public void moveForwards(int time){
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(1);
+        robot.frontleft.setPower(0.25);
+        robot.frontright.setPower(0.25);
+        robot.backleft.setPower(0.25);
+        robot.backright.setPower(0.25);
         sleep(time);
     }
 

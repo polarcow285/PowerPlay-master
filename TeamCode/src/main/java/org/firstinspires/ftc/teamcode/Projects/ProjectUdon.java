@@ -30,10 +30,10 @@ public class ProjectUdon extends Project{
 //        lift = hwMap.dcMotor.get("lift");
 
         //Setup Motor directions and Encoder settings
-        frontright.setDirection(DcMotor.Direction.FORWARD);
-        frontleft.setDirection(DcMotor.Direction.REVERSE);
-        backright.setDirection(DcMotor.Direction.FORWARD);
-        backleft.setDirection(DcMotor.Direction.REVERSE);
+        frontright.setDirection(DcMotor.Direction.REVERSE);
+        frontleft.setDirection(DcMotor.Direction.FORWARD);
+        backright.setDirection(DcMotor.Direction.REVERSE);
+        backleft.setDirection(DcMotor.Direction.FORWARD);
 //        roller.setDirection(DcMotor.Direction.REVERSE);
 //        lift.setDirection(DcMotor.Direction.FORWARD);
 

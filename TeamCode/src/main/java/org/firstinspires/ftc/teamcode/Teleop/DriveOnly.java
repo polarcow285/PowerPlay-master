@@ -32,7 +32,7 @@ public class DriveOnly extends LinearOpMode {
             //Driving controls
 
             double y = 0; //back and forth
-            double x = -gamepad1.right_stick_x * 1.1; //strafing
+            double x = gamepad1.right_stick_x * 1.1; //strafing
             double rx = gamepad1.left_stick_x; //turning
 
             //back and forth movement using triggers
@@ -54,10 +54,10 @@ public class DriveOnly extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
 
-            robot.frontleft.setPower(frontLeftPower);
-            robot.backleft.setPower(backLeftPower);
-            robot.frontright.setPower(frontRightPower);
-            robot.backright.setPower(backRightPower);
+            robot.frontleft.setPower(frontLeftPower*0.25);
+            robot.backleft.setPower(backLeftPower*0.25);
+            robot.frontright.setPower(frontRightPower*0.25);
+            robot.backright.setPower(backRightPower*0.25);
 
 
 
