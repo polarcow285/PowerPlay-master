@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
-@Autonomous(name="Manual Auto")
+/*
+@Autonomous
 public class ManualAuto extends LinearOpMode
 {
     public ProjectUdon robot = new ProjectUdon();
@@ -73,7 +75,7 @@ public class ManualAuto extends LinearOpMode
         /*
          * The INIT-loop:
          * This REPLACES waitForStart!
-         */
+
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -136,9 +138,9 @@ public class ManualAuto extends LinearOpMode
         /*
          * The START command just came in: now work off the latest snapshot acquired
          * during the init loop.
-         */
 
-        /* Update the telemetry */
+
+        /* Update the telemetry
         if(tagOfInterest != null)
         {
             telemetry.addLine("Tag snapshot:\n");
@@ -151,7 +153,7 @@ public class ManualAuto extends LinearOpMode
             telemetry.update();
         }
 
-        /* Actually do something useful */
+        /* Actually do something useful
         if (tagOfInterest == null || tagOfInterest.id == LEFT)
         {
             //trajectory for LEFT/DEFAULT
@@ -174,7 +176,7 @@ public class ManualAuto extends LinearOpMode
         }
 
         /* You wouldn't have this in your autonomous, this is just to prevent the sample from ending
-         * DELETE FOR PROD*/
+         * DELETE FOR PROD
         while (opModeIsActive()) {sleep(20);}
     }
 
@@ -247,4 +249,5 @@ public class ManualAuto extends LinearOpMode
         sleep(time);
     }
 
-}
+//}
+*/
