@@ -54,10 +54,10 @@ public class DriveOnly extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
 
-            robot.frontleft.setPower(frontLeftPower);
-            robot.backleft.setPower(backLeftPower);
-            robot.frontright.setPower(frontRightPower);
-            robot.backright.setPower(backRightPower);
+            robot.frontleft.setPower(0.75 * frontLeftPower);
+            robot.backleft.setPower(0.75 * backLeftPower);
+            robot.frontright.setPower(0.75 * frontRightPower);
+            robot.backright.setPower(0.75 * backRightPower);
 
 
 
