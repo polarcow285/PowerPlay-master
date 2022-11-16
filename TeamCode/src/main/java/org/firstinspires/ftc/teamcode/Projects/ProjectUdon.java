@@ -55,7 +55,7 @@ public class ProjectUdon extends Project{
 //        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //2M Distance Sensor
-        distancesensor = hwMap.get(DistanceSensor.class, "sensor_range");
+        distancesensor = hwMap.get(DistanceSensor.class, "distancesensor");
 
         Stop();
     }
