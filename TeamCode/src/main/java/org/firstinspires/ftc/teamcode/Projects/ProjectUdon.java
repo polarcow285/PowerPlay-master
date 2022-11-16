@@ -1,6 +1,9 @@
+// Project Udon
+
 package org.firstinspires.ftc.teamcode.Projects;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -11,8 +14,8 @@ public class ProjectUdon extends Project{
     public DcMotor frontleft = null;
     public DcMotor backright = null;
     public DcMotor backleft = null;
-
-//    public DcMotor roller = null;
+    public DistanceSensor distancesensor = null;
+    public DcMotor roller = null;
 //    public DcMotor lift = null;
 
     @Override
@@ -50,6 +53,9 @@ public class ProjectUdon extends Project{
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        roller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //2M Distance Sensor
+        distancesensor = hwMap.get(DistanceSensor.class, "sensor_range");
 
         Stop();
     }
