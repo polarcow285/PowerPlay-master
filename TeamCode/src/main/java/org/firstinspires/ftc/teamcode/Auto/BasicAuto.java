@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
-/*
+
 @Autonomous
 public class BasicAuto extends LinearOpMode
 {
@@ -59,7 +59,7 @@ public class BasicAuto extends LinearOpMode
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(1920,1080, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -71,10 +71,10 @@ public class BasicAuto extends LinearOpMode
 
         telemetry.setMsTransmissionInterval(50);
 
-        /*
-         * The INIT-loop:
-         * This REPLACES waitForStart!
-         /*
+
+//         * The INIT-loop:
+//         * This REPLACES waitForStart!
+
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -139,7 +139,7 @@ public class BasicAuto extends LinearOpMode
          * during the init loop.
 
 
-        /* Update the telemetry
+         Update the telemetry*/
         if(tagOfInterest != null)
         {
             telemetry.addLine("Tag snapshot:\n");
@@ -152,7 +152,7 @@ public class BasicAuto extends LinearOpMode
             telemetry.update();
         }
 
-        /* Actually do something useful
+        // Actually do something useful
         if (tagOfInterest == null || tagOfInterest.id == LEFT)
         {
             //trajectory for LEFT/DEFAULT
@@ -174,8 +174,8 @@ public class BasicAuto extends LinearOpMode
             stop(500);
         }
 
-        You wouldn't have this in your autonomous, this is just to prevent the sample from ending
-         * DELETE FOR PROD
+        //You wouldn't have this in your autonomous, this is just to prevent the sample from ending
+         //* DELETE FOR PROD
         while (opModeIsActive()) {sleep(20);}
     }
 
@@ -249,4 +249,4 @@ public class BasicAuto extends LinearOpMode
     }
 
 }
-*/
+
