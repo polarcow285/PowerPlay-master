@@ -16,6 +16,7 @@ public class ProjectUdon extends Project{
     public DcMotor backleft = null;
     public DistanceSensor distancesensor = null;
     public DcMotor roller = null;
+    public DigitalChannel rollerSwitch = null;
 //    public DcMotor lift = null;
 
     @Override
@@ -31,6 +32,8 @@ public class ProjectUdon extends Project{
         backleft = hwMap.dcMotor.get("backleft"); //port e3
 //        roller = hwMap.dcMotor.get("roller");
 //        lift = hwMap.dcMotor.get("lift");
+
+        rollerSwitch = hwMap.digitalChannel.get("rollerSwitch");
 
         //Setup Motor directions and Encoder settings
         frontright.setDirection(DcMotor.Direction.REVERSE);

@@ -35,12 +35,16 @@ public class TestAuto extends LinearOpMode {
 //        robot.frontright.setPower(0);
 
         // generic DistanceSensor methods.
-        telemetry.addData("range", String.format("%.01f mm", robot.distancesensor.getDistance(DistanceUnit.MM)));
-        telemetry.addData("range", String.format("%.01f cm", robot.distancesensor.getDistance(DistanceUnit.CM)));
-        telemetry.addData("range", String.format("%.01f m", robot.distancesensor.getDistance(DistanceUnit.METER)));
-        telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
+        waitForStart();
+        while(opModeIsActive()) {
+            telemetry.addData("range", String.format("%.01f mm", robot.distancesensor.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range", String.format("%.01f cm", robot.distancesensor.getDistance(DistanceUnit.CM)));
+            telemetry.addData("range", String.format("%.01f m", robot.distancesensor.getDistance(DistanceUnit.METER)));
+            telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
 
-        telemetry.update();
+            telemetry.update();
+        }
+
 
     }
 }
