@@ -156,26 +156,26 @@ public class BasicAuto extends LinearOpMode
         if (tagOfInterest == null || tagOfInterest.id == LEFT)
         {
             //trajectory for LEFT/DEFAULT
-            moveLeft(1000);
+            moveForwards(1000, 0.5);
             stop(200);
-            moveForwards(1000);
+            moveLeft(1000, 0.5);
             stop(500);
         }
         else if (tagOfInterest.id == MIDDLE) {
             //trajectory for MIDDLE
-            moveForwards(1000);
+            moveForwards(1000, 0.5);
             stop(500);
         }
         else {
             //trajectory for RIGHT
-            moveRight(1000);
+            moveForwards(1000, 0.5);
             stop(200);
-            moveForwards(1000);
+            moveRight(1000, 0.5);
             stop(500);
         }
 
         //You wouldn't have this in your autonomous, this is just to prevent the sample from ending
-         //* DELETE FOR PROD
+         // DELETE FOR PROD
         while (opModeIsActive()) {sleep(20);}
     }
 
@@ -192,51 +192,51 @@ public class BasicAuto extends LinearOpMode
 
 
     // Beautiful methods
-    public void moveForwards(int time){
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(1);
+    public void moveForwards(int time, double power){
+        robot.frontleft.setPower(power);
+        robot.frontright.setPower(power);
+        robot.backleft.setPower(power);
+        robot.backright.setPower(power);
         sleep(time);
     }
 
-    public void moveRight(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(-1);
+    public void moveRight(int time, double power){
+        robot.frontleft.setPower(-power);
+        robot.frontright.setPower(power);
+        robot.backleft.setPower(power);
+        robot.backright.setPower(-power);
         sleep(time);
     }
 
-    public void moveLeft(int time) {
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(1);
+    public void moveLeft(int time, double power) {
+        robot.frontleft.setPower(power);
+        robot.frontright.setPower(-power);
+        robot.backleft.setPower(-power);
+        robot.backright.setPower(power);
         sleep(time);
     }
 
-    public void moveBackwards(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(-1);
+    public void moveBackwards(int time, double power){
+        robot.frontleft.setPower(-power);
+        robot.frontright.setPower(-power);
+        robot.backleft.setPower(-power);
+        robot.backright.setPower(-power);
         sleep(time);
     }
 
-    public void turnRight (int time){
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(-1);
+    public void turnRight (int time, double power){
+        robot.frontleft.setPower(power);
+        robot.frontright.setPower(-power);
+        robot.backleft.setPower(power);
+        robot.backright.setPower(-power);
         sleep(time);
     }
 
-    public void turnLeft(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(1);
+    public void turnLeft(int time, double power){
+        robot.frontleft.setPower(-power);
+        robot.frontright.setPower(power);
+        robot.backleft.setPower(-power);
+        robot.backright.setPower(power);
         sleep(time);
     }
 
