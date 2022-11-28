@@ -75,13 +75,14 @@ public class ParkingAuto extends LinearOpMode {
         }
 
         waitForStart();
-        moveForwards(2500);
+        //moveForwards(2500);
+
         //autonomous happens here
-        /*
+
         if (p == Path.Red) {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
-                    moveRight(1000);
+                    moveRight(2500);
                     stop(500);
                 }
                 if (l == ParkingLocation.Terminal) {
@@ -91,7 +92,7 @@ public class ParkingAuto extends LinearOpMode {
             }
             if (t == TileLocation.Right) {
                 if (l == ParkingLocation.Substation) {
-                    moveLeft(1000);
+                    moveLeft(2500);
                     stop(500);
                 }
                 if (l == ParkingLocation.Terminal) {
@@ -124,7 +125,7 @@ public class ParkingAuto extends LinearOpMode {
 
 
         }
-        */
+
     }
 
     enum Path {
@@ -139,6 +140,7 @@ public class ParkingAuto extends LinearOpMode {
         Right,
         Left
     }
+
     public void moveForwards(int time){
         robot.frontleft.setPower(0.25);
         robot.frontright.setPower(0.25);
@@ -148,42 +150,42 @@ public class ParkingAuto extends LinearOpMode {
     }
 
     public void moveRight(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(-1);
+        robot.frontleft.setPower(0.25);
+        robot.frontright.setPower(-0.25);
+        robot.backleft.setPower(-0.25);
+        robot.backright.setPower(0.25);
         sleep(time);
     }
 
     public void moveLeft(int time) {
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(1);
+        robot.frontleft.setPower(-0.25);
+        robot.frontright.setPower(0.25);
+        robot.backleft.setPower(0.25);
+        robot.backright.setPower(-0.25);
         sleep(time);
     }
 
     public void moveBackwards(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(-1);
+        robot.frontleft.setPower(-0.25);
+        robot.frontright.setPower(-0.25);
+        robot.backleft.setPower(-0.25);
+        robot.backright.setPower(-0.25);
         sleep(time);
     }
 
     public void turnRight (int time){
-        robot.frontleft.setPower(1);
-        robot.frontright.setPower(-1);
-        robot.backleft.setPower(1);
-        robot.backright.setPower(-1);
+        robot.frontleft.setPower(0.25);
+        robot.frontright.setPower(-0.25);
+        robot.backleft.setPower(0.25);
+        robot.backright.setPower(-0.25);
         sleep(time);
     }
 
     public void turnLeft(int time){
-        robot.frontleft.setPower(-1);
-        robot.frontright.setPower(1);
-        robot.backleft.setPower(-1);
-        robot.backright.setPower(1);
+        robot.frontleft.setPower(-0.25);
+        robot.frontright.setPower(0.25);
+        robot.backleft.setPower(-0.25);
+        robot.backright.setPower(0.25);
         sleep(time);
     }
 

@@ -37,10 +37,10 @@ public class DriveOnly extends LinearOpMode {
 
             //back and forth movement using triggers
             if (gamepad1.right_trigger > 0) {
-                y = -gamepad1.right_trigger;
+                y = gamepad1.right_trigger;
                 x = 0;
             } else if (gamepad1.left_trigger > 0) {
-                y = gamepad1.left_trigger;
+                y = -gamepad1.left_trigger;
                 x = 0;
             }
 
@@ -54,10 +54,34 @@ public class DriveOnly extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
 
-            robot.frontleft.setPower(frontLeftPower*0.25);
-            robot.backleft.setPower(backLeftPower*0.25);
-            robot.frontright.setPower(frontRightPower*0.25);
-            robot.backright.setPower(backRightPower*0.25);
+            // Strafe Right at lower power
+            if(frontLeftPower > 0 && backLeftPower < 0 && frontRightPower < 0 && backRightPower > 0){
+                robot.frontleft.setPower(frontLeftPower*0.25);
+                robot.backleft.setPower(backLeftPower*0.25);
+                robot.frontright.setPower(frontRightPower*0.25);
+                robot.backright.setPower(backRightPower*0.25);
+            }
+            // Strafe Left at lower power
+            else if(frontLeftPower < 0 && backLeftPower > 0 && frontRightPower > 0 && backRightPower < 0){
+                robot.frontleft.setPower(frontLeftPower*0.25);
+                robot.backleft.setPower(backLeftPower*0.25);
+                robot.frontright.setPower(frontRightPower*0.25);
+                robot.backright.setPower(backRightPower*0.25);
+            }
+            //normal speed
+            else{
+                robot.frontleft.setPower(frontLeftPower*0.45);
+                robot.backleft.setPower(backLeftPower*0.45);
+                robot.frontright.setPower(frontRightPower*0.45);
+                robot.backright.setPower(backRightPower*0.45);
+            }
+
+
+
+//            robot.frontleft.setPower(frontLeftPower*0.25);
+//            robot.backleft.setPower(backLeftPower*0.25);
+//            robot.frontright.setPower(frontRightPower*0.25);
+//            robot.backright.setPower(backRightPower*0.25);
 
 
 
