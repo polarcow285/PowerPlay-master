@@ -156,22 +156,38 @@ public class BasicAuto extends LinearOpMode
         if (tagOfInterest == null || tagOfInterest.id == LEFT)
         {
             //trajectory for LEFT/DEFAULT
-            moveForwards(1000, 0.5);
+
+//            moveForwards(1000, 0.5);
+//            stop(200);
+//            moveLeft(1000, 0.5);
+//            stop(500);
+            // 1.25 sec at 0.5 speed to travel 1 tile
+            // 2.5 sec at 0.25 speed to travel 1 tile
+            moveForwards(2000, 0.5);
             stop(200);
-            moveLeft(1000, 0.5);
-            stop(500);
+            turnLeft(600, 0.5);
+            stop(200);
+            moveForwards(1200,0.5);
+            stop(200);
+
         }
         else if (tagOfInterest.id == MIDDLE) {
             //trajectory for MIDDLE
-            moveForwards(1000, 0.5);
+            moveForwards(1800, 0.5);
             stop(500);
         }
         else {
             //trajectory for RIGHT
-            moveForwards(1000, 0.5);
+//            moveForwards(1000, 0.5);
+//            stop(200);
+//            moveRight(1000, 0.5);
+//            stop(500);
+            moveForwards(2000,0.5);
             stop(200);
-            moveRight(1000, 0.5);
-            stop(500);
+            turnRight(600,0.5);
+            stop(200);
+            moveForwards(1200,0.5);
+            stop(200);
         }
 
         //You wouldn't have this in your autonomous, this is just to prevent the sample from ending

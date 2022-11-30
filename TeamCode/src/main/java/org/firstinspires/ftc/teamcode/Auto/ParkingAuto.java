@@ -75,10 +75,10 @@ public class ParkingAuto extends LinearOpMode {
         }
 
         waitForStart();
-        //moveForwards(2500);
+        moveForwards(2500);
 
         //autonomous happens here
-
+        /*
         if (p == Path.Red) {
             if (t == TileLocation.Left) {
                 if (l == ParkingLocation.Substation) {
@@ -125,6 +125,9 @@ public class ParkingAuto extends LinearOpMode {
 
 
         }
+        */
+
+
 
     }
 

@@ -27,23 +27,23 @@ public class TestAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap);
-//        robot.frontleft.setPower(1);
-//        robot.frontright.setPower(-1);
-//        sleep(3000);
-//        robot.frontleft.setPower(0);
-//        robot.frontright.setPower(0);
-
-        // generic DistanceSensor methods.
-        waitForStart();
-        while(opModeIsActive()) {
-            telemetry.addData("range", String.format("%.01f mm", robot.distancesensor.getDistance(DistanceUnit.MM)));
-            telemetry.addData("range", String.format("%.01f cm", robot.distancesensor.getDistance(DistanceUnit.CM)));
-            telemetry.addData("range", String.format("%.01f m", robot.distancesensor.getDistance(DistanceUnit.METER)));
-            telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
-
-            telemetry.update();
-        }
+//        robot.init(hardwareMap);
+////        robot.frontleft.setPower(1);
+////        robot.frontright.setPower(-1);
+////        sleep(3000);
+////        robot.frontleft.setPower(0);
+////        robot.frontright.setPower(0);
+//
+//        // generic DistanceSensor methods.
+//        waitForStart();
+//        while(opModeIsActive()) {
+//            telemetry.addData("range", String.format("%.01f mm", robot.distancesensor.getDistance(DistanceUnit.MM)));
+//            telemetry.addData("range", String.format("%.01f cm", robot.distancesensor.getDistance(DistanceUnit.CM)));
+//            telemetry.addData("range", String.format("%.01f m", robot.distancesensor.getDistance(DistanceUnit.METER)));
+//            telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
+//
+//            telemetry.update();
+//        }
 
 
     }
