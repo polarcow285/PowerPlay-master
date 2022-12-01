@@ -17,7 +17,7 @@ public class ProjectUdon extends Project{
 //    public DistanceSensor distancesensor = null;
     public DcMotor roller = null;
     public DigitalChannel rollerSwitch = null;
-//    public DcMotor lift = null;
+    public DcMotor lift = null;
 
     @Override
     public void init(HardwareMap ahwMap) {
@@ -31,7 +31,7 @@ public class ProjectUdon extends Project{
         backright = hwMap.dcMotor.get("backright"); //port c0
         backleft = hwMap.dcMotor.get("backleft"); //port e3
         roller = hwMap.dcMotor.get("roller");
-//        lift = hwMap.dcMotor.get("lift");
+        lift = hwMap.dcMotor.get("lift");
 
         rollerSwitch = hwMap.digitalChannel.get("rollerSwitch");
 
@@ -41,21 +41,21 @@ public class ProjectUdon extends Project{
         backright.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.FORWARD);
         roller.setDirection(DcMotor.Direction.REVERSE);
-//        lift.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.FORWARD);
 
         frontright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         roller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         roller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //2M Distance Sensor
 //        distancesensor = hwMap.get(DistanceSensor.class, "distancesensor");
@@ -68,7 +68,7 @@ public class ProjectUdon extends Project{
         backright.setPower(0);
         backleft.setPower(0);
         roller.setPower(0);
-//        lift.setPower(0);
+        lift.setPower(0);
     }
 }
 
