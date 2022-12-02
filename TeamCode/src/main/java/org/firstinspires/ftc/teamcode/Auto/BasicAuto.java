@@ -36,8 +36,8 @@ public class BasicAuto extends LinearOpMode
     double cy = 221.506;
 
     // UNITS ARE METERS
-    double tagsize = 0.166;
-
+//    double tagsize = 0.166;
+      double tagsize = 0.003;
     int LEFT = 1; // Tag ID 1, 2, 3 from the 36h11 family
     int MIDDLE = 2;
     int RIGHT = 3;

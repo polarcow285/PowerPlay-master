@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @TeleOp(name="driveAndIntake", group="Mecanum")
@@ -143,6 +145,7 @@ public class driveAndIntake extends LinearOpMode {
             */
             /** END ARM LIFT **/
 
+
             idle();
 
             // Arm Lift Telemetry
@@ -156,6 +159,11 @@ public class driveAndIntake extends LinearOpMode {
             telemetry.addData("backRightPower", backRightPower);
             telemetry.addData("backLeftPower", backLeftPower);
             telemetry.addData("Intake roller switch", robot.rollerSwitch.getState());
+            telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
+            if(robot.distancesensor.getDistance(DistanceUnit.INCH) < 8){
+                telemetry.addLine("YES");
+            }
+
             telemetry.update();
         }
 
