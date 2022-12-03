@@ -37,9 +37,11 @@ public class DriveOnly extends LinearOpMode {
 
             //back and forth movement using triggers
             if (gamepad1.right_trigger > 0) {
+                //this y is positive
                 y = gamepad1.right_trigger;
                 x = 0;
             } else if (gamepad1.left_trigger > 0) {
+                //this y is negative
                 y = -gamepad1.left_trigger;
                 x = 0;
             }
