@@ -167,7 +167,7 @@ public class BasicAuto extends LinearOpMode
             stop(200);
             turnLeft(600, 0.5);
             stop(200);
-            moveForwards(1200,0.5);
+            moveForwards(1000,0.5);
             stop(200);
 
         }
@@ -186,7 +186,7 @@ public class BasicAuto extends LinearOpMode
             stop(200);
             turnRight(600,0.5);
             stop(200);
-            moveForwards(1200,0.5);
+            moveForwards(1000,0.5);
             stop(200);
         }
 
