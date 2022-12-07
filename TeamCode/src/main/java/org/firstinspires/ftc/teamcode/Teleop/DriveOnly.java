@@ -56,24 +56,24 @@ public class DriveOnly extends LinearOpMode {
 
             // Strafe Right at lower power
             if(frontLeftPower > 0 && backLeftPower < 0 && frontRightPower < 0 && backRightPower > 0){
-                robot.frontleft.setPower(frontLeftPower*0.25);
-                robot.backleft.setPower(backLeftPower*0.25);
-                robot.frontright.setPower(frontRightPower*0.25);
-                robot.backright.setPower(backRightPower*0.25);
+                robot.frontleft.setPower(frontLeftPower*0.35);
+                robot.backleft.setPower(backLeftPower*0.35);
+                robot.frontright.setPower(frontRightPower*0.35);
+                robot.backright.setPower(backRightPower*0.35);
             }
             // Strafe Left at lower power
             else if(frontLeftPower < 0 && backLeftPower > 0 && frontRightPower > 0 && backRightPower < 0){
-                robot.frontleft.setPower(frontLeftPower*0.25);
-                robot.backleft.setPower(backLeftPower*0.25);
-                robot.frontright.setPower(frontRightPower*0.25);
-                robot.backright.setPower(backRightPower*0.25);
+                robot.frontleft.setPower(frontLeftPower*0.35);
+                robot.backleft.setPower(backLeftPower*0.35);
+                robot.frontright.setPower(frontRightPower*0.35);
+                robot.backright.setPower(backRightPower*0.35);
             }
             //normal speed
             else{
-                robot.frontleft.setPower(frontLeftPower*0.45);
-                robot.backleft.setPower(backLeftPower*0.45);
-                robot.frontright.setPower(frontRightPower*0.45);
-                robot.backright.setPower(backRightPower*0.45);
+                robot.frontleft.setPower(frontLeftPower*0.5);
+                robot.backleft.setPower(backLeftPower*0.5);
+                robot.frontright.setPower(frontRightPower*0.5);
+                robot.backright.setPower(backRightPower*0.5);
             }
 
 
