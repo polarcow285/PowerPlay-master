@@ -73,10 +73,10 @@ public class driveAndIntake extends LinearOpMode {
             // intake
 
             if (gamepad2.right_bumper && !robot.rollerSwitch.getState()) {
-                robot.roller.setPower(-0.5);
+                robot.roller.setPower(0.5);
             }
             else if (gamepad2.left_bumper) {
-                robot.roller.setPower(0.5);
+                robot.roller.setPower(-0.5);
             }
             else {
                 robot.roller.setPower(0);

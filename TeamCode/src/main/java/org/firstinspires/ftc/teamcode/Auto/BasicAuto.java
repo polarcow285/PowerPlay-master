@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.AprilTagDetectionPipeline;
@@ -48,6 +49,10 @@ public class BasicAuto extends LinearOpMode
     public void runOpMode()
     {
         robot.init(hardwareMap);
+        robot.frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
@@ -156,38 +161,29 @@ public class BasicAuto extends LinearOpMode
         if (tagOfInterest == null || tagOfInterest.id == LEFT)
         {
             //trajectory for LEFT/DEFAULT
+            // 750 counts for 1 tile
+            // 412 counts to turn 90 degrees
 
-//            moveForwards(1000, 0.5);
-//            stop(200);
-//            moveLeft(1000, 0.5);
-//            stop(500);
-            // 1.25 sec at 0.5 speed to travel 1 tile
-            // 2.5 sec at 0.25 speed to travel 1 tile
-            moveForwards(2000, 0.5);
-            stop(200);
-            turnLeft(600, 0.5);
-            stop(200);
-            moveForwards(1000,0.5);
-            stop(200);
-
+            encoderDrive (0.3, 800,800,800,800);
+            stop(500);
+            encoderDrive (0.3, -412, 412, -412, 412);
+            stop(500);
+            encoderDrive (0.3, 750,750,750,750);
+            stop(500);
         }
         else if (tagOfInterest.id == MIDDLE) {
             //trajectory for MIDDLE
-            moveForwards(1800, 0.5);
-            stop(500);
+            encoderDrive (0.3, 800, 800,800,800);
+            stop(1000);
         }
         else {
             //trajectory for RIGHT
-//            moveForwards(1000, 0.5);
-//            stop(200);
-//            moveRight(1000, 0.5);
-//            stop(500);
-            moveForwards(2000,0.5);
-            stop(200);
-            turnRight(600,0.5);
-            stop(200);
-            moveForwards(1000,0.5);
-            stop(200);
+            encoderDrive (0.3, 800,800,800,800);
+            stop(1000);
+            encoderDrive (0.3, 412, -412, 412, -412);
+            stop(1000);
+            encoderDrive (0.3, 750,750,750,750);
+            stop(1000);
         }
 
         //You wouldn't have this in your autonomous, this is just to prevent the sample from ending
@@ -207,55 +203,67 @@ public class BasicAuto extends LinearOpMode
     }
 
 
-    // Beautiful methods
-    public void moveForwards(int time, double power){
-        robot.frontleft.setPower(power);
-        robot.frontright.setPower(power);
-        robot.backleft.setPower(power);
-        robot.backright.setPower(power);
-        sleep(time);
-    }
+    //encoder method
+    public void encoderDrive(double speed,
+                             double frontLeftCounts, double frontRightCounts, double backLeftCounts, double backRightCounts) {
+        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
 
-    public void moveRight(int time, double power){
-        robot.frontleft.setPower(-power);
-        robot.frontright.setPower(power);
-        robot.backleft.setPower(power);
-        robot.backright.setPower(-power);
-        sleep(time);
-    }
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
 
-    public void moveLeft(int time, double power) {
-        robot.frontleft.setPower(power);
-        robot.frontright.setPower(-power);
-        robot.backleft.setPower(-power);
-        robot.backright.setPower(power);
-        sleep(time);
-    }
+            // Determine new target position, and pass to motor controller
+            newFrontLeftTarget = robot.frontleft.getCurrentPosition() + (int) (frontLeftCounts);
+            newFrontRightTarget = robot.frontright.getCurrentPosition() + (int) (frontRightCounts);
+            newBackLeftTarget = robot.backleft.getCurrentPosition() + (int) (backLeftCounts);
+            newBackRightTarget = robot.backright.getCurrentPosition() + (int) (backRightCounts);
+            robot.frontleft.setTargetPosition(newFrontLeftTarget);
+            robot.frontright.setTargetPosition(newFrontRightTarget);
+            robot.backleft.setTargetPosition(newBackLeftTarget);
+            robot.backright.setTargetPosition(newBackRightTarget);
 
-    public void moveBackwards(int time, double power){
-        robot.frontleft.setPower(-power);
-        robot.frontright.setPower(-power);
-        robot.backleft.setPower(-power);
-        robot.backright.setPower(-power);
-        sleep(time);
-    }
+            // Turn On RUN_TO_POSITION
+            robot.frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-    public void turnRight (int time, double power){
-        robot.frontleft.setPower(power);
-        robot.frontright.setPower(-power);
-        robot.backleft.setPower(power);
-        robot.backright.setPower(-power);
-        sleep(time);
-    }
+            robot.frontleft.setPower(Math.abs(speed));
+            robot.frontright.setPower(Math.abs(speed));
+            robot.backleft.setPower(Math.abs(speed));
+            robot.backright.setPower(Math.abs(speed));
 
-    public void turnLeft(int time, double power){
-        robot.frontleft.setPower(-power);
-        robot.frontright.setPower(power);
-        robot.backleft.setPower(-power);
-        robot.backright.setPower(power);
-        sleep(time);
-    }
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (robot.frontleft.isBusy() && robot.frontright.isBusy() && robot.backleft.isBusy() && robot.backright.isBusy())) {
 
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.frontleft.getCurrentPosition(),
+                        robot.frontright.getCurrentPosition(),
+                        robot.backleft.getCurrentPosition(),
+                        robot.backright.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
     public void stop(int time) {
         robot.frontleft.setPower(0);
         robot.frontright.setPower(0);
