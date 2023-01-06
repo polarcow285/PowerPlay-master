@@ -1,42 +1,50 @@
-//package org.firstinspires.ftc.teamcode.Teleop;
-//
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.exception.RobotCoreException;
-//import com.qualcomm.robotcore.hardware.Gamepad;
-//import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
-//
-//@TeleOp(name="LiftOnly", group="Mecanum")
-//public class LiftOnly extends LinearOpMode {
-//    private ProjectUdon robot = new ProjectUdon();
-//    Gamepad currentGamepad2 = new Gamepad();
-//    Gamepad previousGamepad2 = new Gamepad();
-//
-//    @Override
-//    public void runOpMode() throws InterruptedException {
-//
-//        robot.init(hardwareMap);
-//
-//        telemetry.setAutoClear(true);
-//        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
-//
-//        int liftTarget = 0;
-//        double liftSpeed = 0;
-//        String liftCurrentDirection = "up";
-//
-//        waitForStart();
-//
-//        while (opModeIsActive()) {
-//
-//            try {
-//                previousGamepad2.copy(currentGamepad2);
-//                currentGamepad2.copy(gamepad2);
-//            }
-//            catch (RobotCoreException e) {
-//
-//            }
-//
-//            // lift code
+package org.firstinspires.ftc.teamcode.Teleop;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
+
+@TeleOp(name="LiftOnly", group="Mecanum")
+public class LiftOnly extends LinearOpMode {
+    private ProjectUdon robot = new ProjectUdon();
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        robot.init(hardwareMap);
+
+        telemetry.setAutoClear(true);
+        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+
+        int liftTarget = 0;
+        double liftSpeed = 0;
+        String liftCurrentDirection = "up";
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            try {
+                previousGamepad2.copy(currentGamepad2);
+                currentGamepad2.copy(gamepad2);
+            }
+            catch (RobotCoreException e) {
+
+            }
+
+            // lift code
+            if (gamepad2.y) {
+                liftSpeed = 0.98;
+                robot.lift.setPower(liftSpeed);
+            }
+            else if (gamepad2.a) {
+                liftSpeed = -0.98;
+                robot.lift.setPower(liftSpeed);
+            }
 //            if (robot.lift.getCurrentPosition()>-2000 && gamepad2.x) { // Arm UP
 //                liftTarget = -2000;
 //                liftSpeed = 0.98;
@@ -87,25 +95,25 @@
 //                robot.lift.setPower(liftSpeed);
 //                robot.lift.setTargetPosition(liftTarget);
 //            }
-//
-//            // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
-////            if ( liftCurrentDirection == "down" && ( lift.getTargetPosition() < 5 ) ){
-////                liftSpeed = 0;
-////                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-////            }
-//
-//            /** END ARM LIFT **/
-//
-//
-//            idle();
-//
-//            // Arm Lift Telemetry
-//            if(robot.lift.isBusy() ){
-//                telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
-//                telemetry.update();
+
+            // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
+//            if ( liftCurrentDirection == "down" && ( lift.getTargetPosition() < 5 ) ){
+//                liftSpeed = 0;
+//                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            }
-//        }
-//
-//    }
-//
-//    }
+
+            /** END ARM LIFT **/
+
+
+            idle();
+
+            // Arm Lift Telemetry
+            if(robot.lift.isBusy() ){
+                telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+        }
+
+    }
+
+    }
