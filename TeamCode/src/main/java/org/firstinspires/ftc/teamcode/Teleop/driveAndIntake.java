@@ -36,6 +36,7 @@ public class driveAndIntake extends LinearOpMode {
             try {
                 previousGamepad2.copy(currentGamepad2);
                 currentGamepad2.copy(gamepad2);
+                throw new RobotCoreException("I am Exception Alpha!");
             }
             catch (RobotCoreException e) {
 
@@ -81,6 +82,23 @@ public class driveAndIntake extends LinearOpMode {
             else {
                 robot.roller.setPower(0);
             }
+
+            // lift code
+            if (gamepad2.y && robot.lift.getCurrentPosition()<5600) {
+                //liftSpeed = 1;
+                robot.lift.setPower(0.5);
+            }
+            else if(gamepad2.a &&robot.lift.getCurrentPosition()>0){
+                robot.lift.setPower(-0.5);
+            }
+            else{
+                robot.lift.setPower(0);
+            }
+
+
+
+            telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+            telemetry.update();
 
 
 

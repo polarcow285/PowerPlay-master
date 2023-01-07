@@ -25,6 +25,7 @@ public class DriveOnly extends LinearOpMode {
             try {
                 previousGamepad2.copy(currentGamepad2);
                 currentGamepad2.copy(gamepad2);
+                throw new RobotCoreException("I am Exception Alpha!");
             }
             catch (RobotCoreException e) {
 

@@ -31,14 +31,14 @@ public class ProjectUdon extends Project{
         hwMap = ahwMap;
 
         //Define and Initialize Motors
-        frontright = hwMap.dcMotor.get("frontright"); //port c3
-        frontleft = hwMap.dcMotor.get("frontleft"); //port e0
-        backright = hwMap.dcMotor.get("backright"); //port c0
+        frontright = hwMap.dcMotor.get("frontright"); //port e0
+        frontleft = hwMap.dcMotor.get("frontleft"); //port e2
+        backright = hwMap.dcMotor.get("backright"); //port e1
         backleft = hwMap.dcMotor.get("backleft"); //port e3
-        roller = hwMap.dcMotor.get("roller");
-        lift = hwMap.dcMotor.get("lift");
+        roller = hwMap.dcMotor.get("roller"); //port c3
+        lift = hwMap.dcMotor.get("lift"); //port c0
 
-        rollerSwitch = hwMap.digitalChannel.get("rollerSwitch");
+        rollerSwitch = hwMap.digitalChannel.get("rollerSwitch"); // digital device c0.1
 
         //Setup Motor directions and Encoder settings
         frontright.setDirection(DcMotor.Direction.REVERSE);

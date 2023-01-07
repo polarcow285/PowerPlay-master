@@ -35,6 +35,7 @@ public class ParkingAuto extends LinearOpMode {
             try {
                 previousGamepad1.copy(currentGamepad1);
                 currentGamepad1.copy(gamepad1);
+                throw new RobotCoreException("I am Exception Alpha!");
             }
             catch (RobotCoreException e) {
 
