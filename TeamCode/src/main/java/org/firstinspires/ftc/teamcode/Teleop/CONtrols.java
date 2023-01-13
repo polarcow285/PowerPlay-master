@@ -41,7 +41,7 @@ public class CONtrols extends LinearOpMode {
             //Driving controls
 
             double y = 0; //back and forth
-            double x = -gamepad1.right_stick_x * 1.1; //strafing
+            double x = gamepad1.right_stick_x * 1.1; //strafing
             double rx = gamepad1.left_stick_x; //turning
 
             //back and forth movement using triggers
@@ -79,18 +79,20 @@ public class CONtrols extends LinearOpMode {
             }
             //normal speed
             else{
-                robot.frontleft.setPower(frontLeftPower*0.5);
-                robot.backleft.setPower(backLeftPower*0.5);
-                robot.frontright.setPower(frontRightPower*0.5);
-                robot.backright.setPower(backRightPower*0.5);
+                robot.frontleft.setPower(frontLeftPower*0.3);
+                robot.backleft.setPower(backLeftPower*0.3);
+                robot.frontright.setPower(frontRightPower*0.3);
+                robot.backright.setPower(backRightPower*0.3);
             }
 
             // roller code
+            //intake
             if (gamepad2.right_bumper && !robot.rollerSwitch.getState()) {
                 robot.roller.setPower(0.5);
             }
+            //outtake
             else if (gamepad2.left_bumper) {
-                robot.roller.setPower(-0.5);
+                robot.roller.setPower(-0.25);
             }
             else {
                 robot.roller.setPower(0);
@@ -111,6 +113,7 @@ public class CONtrols extends LinearOpMode {
 
 
             telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+            telemetry.addData("Intake roller switch", robot.rollerSwitch.getState());
 
             // lift code
             /*
@@ -179,10 +182,10 @@ public class CONtrols extends LinearOpMode {
 
 
 
-            telemetry.addData("frontLeftPower", frontLeftPower);
+            /*telemetry.addData("frontLeftPower", frontLeftPower);
             telemetry.addData("frontRightPower", frontRightPower);
             telemetry.addData("backRightPower", backRightPower);
-            telemetry.addData("backLeftPower", backLeftPower);
+            telemetry.addData("backLeftPower", backLeftPower);*/
             telemetry.update();
         }
 
