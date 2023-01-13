@@ -97,7 +97,7 @@ public class CONtrols extends LinearOpMode {
             }
 
             // lift code
-            if (gamepad2.y && robot.lift.getCurrentPosition()<5600) {
+            if (gamepad2.y && robot.lift.getCurrentPosition()<4100) {
                 //liftSpeed = 1;
                 robot.lift.setPower(0.5);
             }
