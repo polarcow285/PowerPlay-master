@@ -92,7 +92,7 @@ public class CONtrols extends LinearOpMode {
             }
             //outtake
             else if (gamepad2.left_bumper) {
-                robot.roller.setPower(-0.25);
+                robot.roller.setPower(-0.5);
             }
             else {
                 robot.roller.setPower(0);
@@ -101,10 +101,10 @@ public class CONtrols extends LinearOpMode {
             // lift code
             if (gamepad2.y && robot.lift.getCurrentPosition()<4100) {
                 //liftSpeed = 1;
-                robot.lift.setPower(0.5);
+                robot.lift.setPower(0.45);
             }
             else if(gamepad2.a &&robot.lift.getCurrentPosition()>0){
-                robot.lift.setPower(-0.5);
+                robot.lift.setPower(-0.45);
             }
             else{
                 robot.lift.setPower(0);
