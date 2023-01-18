@@ -177,10 +177,10 @@ public class driveAndIntake extends LinearOpMode {
             telemetry.addData("backRightPower", backRightPower);
             telemetry.addData("backLeftPower", backLeftPower);
             telemetry.addData("Intake roller switch", robot.rollerSwitch.getState());
-//            telemetry.addData("range", String.format("%.01f in", robot.distancesensor.getDistance(DistanceUnit.INCH)));
-//            if(robot.distancesensor.getDistance(DistanceUnit.INCH) < 8){
-//                telemetry.addLine("YES");
-//            }
+            telemetry.addData("range", String.format("%.01f in", robot.distance.getDistance(DistanceUnit.INCH)));
+            if(robot.distance.getDistance(DistanceUnit.INCH) < 8){
+                telemetry.addLine("YES");
+            }
 
             telemetry.update();
         }
