@@ -63,26 +63,41 @@ public class CONtrols extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
 
 
-            // Strafe Right at lower power
-            if(frontLeftPower > 0 && backLeftPower < 0 && frontRightPower < 0 && backRightPower > 0){
+            // Turn Right at lower power
+            if(frontLeftPower > 0 && backLeftPower > 0 && frontRightPower < 0 && backRightPower < 0){
                 robot.frontleft.setPower(frontLeftPower*0.35);
                 robot.backleft.setPower(backLeftPower*0.35);
                 robot.frontright.setPower(frontRightPower*0.35);
                 robot.backright.setPower(backRightPower*0.35);
+            }
+            // Turn Left at lower power
+            else if(frontLeftPower < 0 && backLeftPower < 0 && frontRightPower > 0 && backRightPower > 0){
+                robot.frontleft.setPower(frontLeftPower*0.35);
+                robot.backleft.setPower(backLeftPower*0.35);
+                robot.frontright.setPower(frontRightPower*0.35);
+                robot.backright.setPower(backRightPower*0.35);
+            }
+            // Strafe Right at lower power
+            else if(frontLeftPower > 0 && backLeftPower < 0 && frontRightPower < 0 && backRightPower > 0){
+                robot.frontleft.setPower(frontLeftPower*0.25);
+                robot.backleft.setPower(backLeftPower*0.25);
+                robot.frontright.setPower(frontRightPower*0.25);
+                robot.backright.setPower(backRightPower*0.25);
             }
             // Strafe Left at lower power
             else if(frontLeftPower < 0 && backLeftPower > 0 && frontRightPower > 0 && backRightPower < 0){
-                robot.frontleft.setPower(frontLeftPower*0.35);
-                robot.backleft.setPower(backLeftPower*0.35);
-                robot.frontright.setPower(frontRightPower*0.35);
-                robot.backright.setPower(backRightPower*0.35);
+                robot.frontleft.setPower(frontLeftPower*0.25);
+                robot.backleft.setPower(backLeftPower*0.25);
+                robot.frontright.setPower(frontRightPower*0.25);
+                robot.backright.setPower(backRightPower*0.25);
             }
+
             //normal speed
             else{
-                robot.frontleft.setPower(frontLeftPower*0.3);
-                robot.backleft.setPower(backLeftPower*0.3);
-                robot.frontright.setPower(frontRightPower*0.3);
-                robot.backright.setPower(backRightPower*0.3);
+                robot.frontleft.setPower(frontLeftPower*0.4);
+                robot.backleft.setPower(backLeftPower*0.4);
+                robot.frontright.setPower(frontRightPower*0.4);
+                robot.backright.setPower(backRightPower*0.4);
             }
 
             // roller code
@@ -101,14 +116,16 @@ public class CONtrols extends LinearOpMode {
             // lift code
             if (gamepad2.y && robot.lift.getCurrentPosition()<4100) {
                 //liftSpeed = 1;
-                robot.lift.setPower(0.45);
+                robot.lift.setPower(0.75);
             }
-            else if(gamepad2.a &&robot.lift.getCurrentPosition()>0){
-                robot.lift.setPower(-0.45);
+            else if(gamepad2.a && robot.lift.getCurrentPosition()>0){
+                robot.lift.setPower(-0.50);
             }
             else{
                 robot.lift.setPower(0);
             }
+
+
 
 
 
