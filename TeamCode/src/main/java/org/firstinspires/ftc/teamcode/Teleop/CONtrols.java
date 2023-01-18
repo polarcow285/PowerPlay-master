@@ -133,7 +133,7 @@ public class CONtrols extends LinearOpMode {
             telemetry.addData("Intake roller switch", robot.rollerSwitch.getState());
 
             // lift code
-            /*
+
             if (robot.lift.getCurrentPosition()>-2000 && gamepad2.x) { // Arm UP
                 liftTarget = -2000;
                 liftSpeed = 0.98;
@@ -186,12 +186,26 @@ public class CONtrols extends LinearOpMode {
             }
 
             // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
-//            if ( liftCurrentDirection == "down" && ( lift.getTargetPosition() < 5 ) ){
+//            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){
 //                liftSpeed = 0;
-//                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//                robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            }
 
             /** END ARM LIFT **/
+
+            //Outtake sequence
+            if(gamepad2.dpad_down && robot.lift.getCurrentPosition()>50){
+                liftTarget = robot.lift.getCurrentPosition()-50;
+                liftSpeed = -0.98;
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+
+                robot.roller.setPower(-0.5);
+                sleep(500);
+                robot.roller.setPower(0);
+            }
 
 
             idle();
