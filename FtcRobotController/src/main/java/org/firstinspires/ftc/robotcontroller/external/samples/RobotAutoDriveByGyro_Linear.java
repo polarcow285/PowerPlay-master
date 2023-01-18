@@ -142,26 +142,26 @@ public class RobotAutoDriveByGyro_Linear extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+//        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+//        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+//        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+//        rightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // define initialization values for IMU, and then initialize it.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        imu.initialize(parameters);
 
         // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (Display Gyro value while waiting)
         while (opModeInInit()) {
