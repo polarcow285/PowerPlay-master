@@ -70,15 +70,15 @@ public class IMUTest extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 537.7 ;   // eg: GoBILDA 312 RPM ket //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing. //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
+    static final double     COUNTS_PER_MOTOR_REV    = 28.0 ;     // dc hex motor 40:1 //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
+    static final double     DRIVE_GEAR_REDUCTION    = 12.0 ;     // No External Gearing. //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
+    static final double     WHEEL_DIAMETER_INCHES   = 2.95 ;     // For figuring circumference //TODO FIX TO BE IN ACCORDANCE WITH OUR MOTORS
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants define the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.4;     // Max driving speed for better distance accuracy.
+    static final double     DRIVE_SPEED             = 0.2;     // Max driving speed for better distance accuracy.
     static final double     TURN_SPEED              = 0.2;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
     // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
@@ -94,7 +94,7 @@ public class IMUTest extends LinearOpMode {
         robot.init(hardwareMap);
 
         waitForStart();
-        while(opModeIsActive()) {
+        //while(opModeIsActive()) {
             // Wait for the game to start (Display Gyro value while waiting)
             while (opModeInInit()) {
                 telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
@@ -113,10 +113,11 @@ public class IMUTest extends LinearOpMode {
             //          holdHeading() is used after turns to let the heading stabilize
             //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-            driveStraight(DRIVE_SPEED, 750, 0.0);    // Drive Forward 24"
+            driveStraight(DRIVE_SPEED, 36, 0.0);    // Drive Forward 24"
             turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
-            holdHeading( TURN_SPEED, -90.0, 0.5);   // Hold -45 Deg heading for a 1/2 second
-            driveStraight(DRIVE_SPEED, 750, 0.0);
+            holdHeading( TURN_SPEED, -90.0, 1.25);   // Hold -45 Deg heading for a 1/2 second
+            driveStraight(DRIVE_SPEED, 36, -90.0);
+            holdHeading( TURN_SPEED, -90.0, 0.5);
             turnToHeading( TURN_SPEED, 45.0);               // Turn  CW to -45 Degrees
 
 //            driveStraight(DRIVE_SPEED, 17.0, -45.0);  // Drive Forward 17" at -45 degrees (12"x and 12"y)
@@ -132,7 +133,7 @@ public class IMUTest extends LinearOpMode {
             telemetry.addData("Path", "Complete");
             telemetry.update();
             sleep(1000);  // Pause to display last telemetry message.
-        }
+        //}
         }
 
 
