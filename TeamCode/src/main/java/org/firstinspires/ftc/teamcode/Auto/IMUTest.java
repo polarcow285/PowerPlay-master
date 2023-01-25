@@ -113,12 +113,21 @@ public class IMUTest extends LinearOpMode {
             //          holdHeading() is used after turns to let the heading stabilize
             //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-            driveStraight(DRIVE_SPEED, 36, 0.0);    // Drive Forward 24"
-            turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
-            holdHeading( TURN_SPEED, -90.0, 1.25);   // Hold -45 Deg heading for a 1/2 second
-            driveStraight(DRIVE_SPEED, 36, -90.0);
+            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
+            turnToHeading(TURN_SPEED, -90.0);
+            holdHeading(TURN_SPEED, -90.0, 1.25);
+            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
             holdHeading( TURN_SPEED, -90.0, 0.5);
-            turnToHeading( TURN_SPEED, 45.0);               // Turn  CW to -45 Degrees
+            turnToHeading(TURN_SPEED, -43.0);
+            holdHeading( TURN_SPEED, -43.0, 0.5);
+
+
+//            driveStraight(DRIVE_SPEED, 925, 0.0);    // Drive Forward 24"
+//            turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
+//            holdHeading( TURN_SPEED, -90.0, 1.25);   // Hold -45 Deg heading for a 1/2 second
+//            driveStraight(DRIVE_SPEED, 30, -90.0);
+//            holdHeading( TURN_SPEED, -90.0, 0.5);
+//            turnToHeading( TURN_SPEED, -45.0);               // Turn  CW to -45 Degrees
 
 //            driveStraight(DRIVE_SPEED, 17.0, -45.0);  // Drive Forward 17" at -45 degrees (12"x and 12"y)
 //            turnToHeading( TURN_SPEED,  45.0);               // Turn  CCW  to  45 Degrees
@@ -281,7 +290,7 @@ public class IMUTest extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            int moveCounts = (int)(distance * COUNTS_PER_INCH);
+            int moveCounts = (int)(distance);
             leftTarget = robot.frontleft.getCurrentPosition() + moveCounts;
             leftTarget = robot.backleft.getCurrentPosition() + moveCounts;
             rightTarget = robot.frontright.getCurrentPosition() + moveCounts;
@@ -304,22 +313,22 @@ public class IMUTest extends LinearOpMode {
             moveRobot(maxDriveSpeed, 0);
 
             // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (robot.frontright.isBusy() && robot.frontleft.isBusy())) {
-
-                // Determine required steering to keep on heading
-                turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    turnSpeed *= -1.0;
-
-                // Apply the turning correction to the current driving speed.
-                moveRobot(driveSpeed, turnSpeed);
-
-                // Display drive status for the driver.
-                sendTelemetry(true);
-            }
+//            while (opModeIsActive() &&
+//                    (robot.frontright.isBusy() && robot.frontleft.isBusy())) {
+//
+//                // Determine required steering to keep on heading
+//                turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
+//
+//                // if driving in reverse, the motor correction also needs to be reversed
+//                if (distance < 0)
+//                    turnSpeed *= -1.0;
+//
+//                // Apply the turning correction to the current driving speed.
+//                moveRobot(driveSpeed, turnSpeed);
+//
+//                // Display drive status for the driver.
+//                sendTelemetry(true);
+//            }
 
             // Stop all motion & Turn off RUN_TO_POSITION
             moveRobot(0, 0);
@@ -491,5 +500,67 @@ public class IMUTest extends LinearOpMode {
         // Save a new heading offset equal to the current raw heading.
         headingOffset = getRawHeading();
         robotHeading = 0;
+    }
+
+    //encoder method
+    public void encoderDrive(double speed,
+                             double frontLeftCounts, double frontRightCounts, double backLeftCounts, double backRightCounts) {
+        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newFrontLeftTarget = robot.frontleft.getCurrentPosition() + (int) (frontLeftCounts);
+            newFrontRightTarget = robot.frontright.getCurrentPosition() + (int) (frontRightCounts);
+            newBackLeftTarget = robot.backleft.getCurrentPosition() + (int) (backLeftCounts);
+            newBackRightTarget = robot.backright.getCurrentPosition() + (int) (backRightCounts);
+            robot.frontleft.setTargetPosition(newFrontLeftTarget);
+            robot.frontright.setTargetPosition(newFrontRightTarget);
+            robot.backleft.setTargetPosition(newBackLeftTarget);
+            robot.backright.setTargetPosition(newBackRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            robot.frontleft.setPower(Math.abs(speed));
+            robot.frontright.setPower(Math.abs(speed));
+            robot.backleft.setPower(Math.abs(speed));
+            robot.backright.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (robot.frontleft.isBusy() && robot.frontright.isBusy() && robot.backleft.isBusy() && robot.backright.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.frontleft.getCurrentPosition(),
+                        robot.frontright.getCurrentPosition(),
+                        robot.backleft.getCurrentPosition(),
+                        robot.backright.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
     }
 }

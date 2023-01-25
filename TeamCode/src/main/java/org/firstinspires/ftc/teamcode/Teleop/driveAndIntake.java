@@ -22,9 +22,9 @@ public class driveAndIntake extends LinearOpMode {
         telemetry.setAutoClear(true);
         //telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
 
-        int liftTarget = 0;
-        double liftSpeed = 0;
-        String liftCurrentDirection = "up";
+//        int liftTarget = 0;
+//        double liftSpeed = 0;
+//        String liftCurrentDirection = "up";
         boolean rollerForwardToggle = false;
         boolean rollerBackwardToggle = false;
 
@@ -84,21 +84,21 @@ public class driveAndIntake extends LinearOpMode {
             }
 
             // lift code
-            if (gamepad2.y && robot.lift.getCurrentPosition()<5600) {
-                //liftSpeed = 1;
-                robot.lift.setPower(0.5);
-            }
-            else if(gamepad2.a &&robot.lift.getCurrentPosition()>0){
-                robot.lift.setPower(-0.5);
-            }
-            else{
-                robot.lift.setPower(0);
-            }
+//            if (gamepad2.y && robot.lift.getCurrentPosition()<5600) {
+//                //liftSpeed = 1;
+//                robot.lift.setPower(0.5);
+//            }
+//            else if(gamepad2.a &&robot.lift.getCurrentPosition()>0){
+//                robot.lift.setPower(-0.5);
+//            }
+//            else{
+//                robot.lift.setPower(0);
+//            }
 
 
 
-            telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
-            telemetry.update();
+            //telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+            //telemetry.update();
 
 
 
