@@ -17,7 +17,7 @@ public class ProjectUdon extends Project{
     public DcMotor frontleft = null;
     public DcMotor backright = null;
     public DcMotor backleft = null;
-//    public DistanceSensor distance = null;
+    public DistanceSensor distance = null;
     public DcMotor roller = null;
     public DigitalChannel rollerSwitch = null;
     public DcMotor lift = null;
@@ -67,7 +67,7 @@ public class ProjectUdon extends Project{
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //2M Distance Sensor
-//        distance = hwMap.get(DistanceSensor.class, "distance");
+        distance = hwMap.get(DistanceSensor.class, "distance");
 
         //IMU
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
