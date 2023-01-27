@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Vision.PoleDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Vision.AprilTagDetectionPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -24,6 +25,7 @@ public class BasicAuto extends LinearOpMode
     public ProjectUdon robot = new ProjectUdon();
     OpenCvCamera webcam;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    PoleDetectionPipeline detector = new PoleDetectionPipeline(telemetry);
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -59,6 +61,7 @@ public class BasicAuto extends LinearOpMode
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         webcam.setPipeline(aprilTagDetectionPipeline);
+        webcam.setPipeline(detector);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -143,8 +146,10 @@ public class BasicAuto extends LinearOpMode
          * The START command just came in: now work off the latest snapshot acquired
          * during the init loop.
 
-
          Update the telemetry*/
+
+        PoleDetectionPipeline.ShippingElementLocation elementLocation = detector.getShippingElementLocation();
+
         if(tagOfInterest != null)
         {
             telemetry.addLine("Tag snapshot:\n");
@@ -194,12 +199,12 @@ public class BasicAuto extends LinearOpMode
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
-        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
-        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
-        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+//        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+//        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
+//        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+//        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
+//        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
+//        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
     }
 
 
@@ -248,6 +253,7 @@ public class BasicAuto extends LinearOpMode
                         robot.frontright.getCurrentPosition(),
                         robot.backleft.getCurrentPosition(),
                         robot.backright.getCurrentPosition());
+                telemetry.addData("Pole Location", detector.getShippingElementLocation());
                 telemetry.update();
             }
 
