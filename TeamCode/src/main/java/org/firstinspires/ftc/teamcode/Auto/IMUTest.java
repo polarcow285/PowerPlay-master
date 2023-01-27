@@ -64,6 +64,8 @@ public class IMUTest extends LinearOpMode {
     private int     leftTarget    = 0;
     private int     rightTarget   = 0;
 
+    public ElapsedTime runTime = new ElapsedTime(); //sets up a timer in the program
+
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
     // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
@@ -120,6 +122,16 @@ public class IMUTest extends LinearOpMode {
             holdHeading( TURN_SPEED, -90.0, 0.5);
             turnToHeading(TURN_SPEED, -43.0);
             holdHeading( TURN_SPEED, -43.0, 0.5);
+            //to do: raise lift to high pole
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+            runTime.reset();
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
+                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
+                if(runTime.time() > 5){
+                    break;
+                }
+            }
+            //to do: drop the cone
 
 
 //            driveStraight(DRIVE_SPEED, 925, 0.0);    // Drive Forward 24"
