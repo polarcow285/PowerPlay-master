@@ -51,6 +51,7 @@ import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @Autonomous
 public class ComplexAuto extends LinearOpMode {
+
     public ProjectUdon robot = new ProjectUdon();
     private Orientation lastAngles = new Orientation();
     double  globalAngle, power = .30, correction;
@@ -129,6 +130,9 @@ public class ComplexAuto extends LinearOpMode {
         robot.frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int liftTarget = 0;
+        double liftSpeed = 0;
+        String liftCurrentDirection = "up";
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
@@ -250,53 +254,171 @@ public class ComplexAuto extends LinearOpMode {
             // 750 counts for 1 tile
             // 412 counts to turn 90 degrees
 
-            encoderDrive (0.3, 800,800,800,800);
-            stop(500);
-            encoderDrive (0.3, -412, 412, -412, 412);
-            stop(500);
-            encoderDrive (0.3, 750,750,750,750);
-            stop(500);
+            // Step through each leg of the path,
+            // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
+            //          holdHeading() is used after turns to let the heading stabilize
+            //          Add a sleep(2000) after any step to keep the telemetry data visible for review
+
+            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
+            turnToHeading(TURN_SPEED, -90.0);
+            holdHeading(TURN_SPEED, -90.0, 1.25);
+            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            holdHeading( TURN_SPEED, -90.0, 0.5);
+            turnToHeading(TURN_SPEED, -43.0);
+            holdHeading( TURN_SPEED, -43.0, 0.5);
+            //to do: raise lift to high pole
+            liftTarget = -6000; // change value, guesstimating rn
+            liftSpeed = 0.98;
+            liftCurrentDirection = "up";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(4000);
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+            runTime.reset();
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
+                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
+                if(runTime.time() > 5){
+                    break;
+                }
+            }
+
+            //to do: drop the cone
+            // lower lift a little bit so cone hits the pole
+            liftTarget = -5000; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(2000);
+            robot.roller.setPower(-0.5);
+            sleep(1000);
+
+            liftTarget = 0; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(3000);
+
+            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
+            turnToHeading(TURN_SPEED, 43.0);
+            holdHeading( TURN_SPEED, 43.0, 0.5);
+            encoderDrive(-DRIVE_SPEED, -1700, -1700, -1700, -1700);
+
+            // NEEDS CHANGING
+//            encoderDrive (0.3, 800,800,800,800);
+//            stop(500);
+//            encoderDrive (0.3, -412, 412, -412, 412);
+//            stop(500);
+//            encoderDrive (0.3, 750,750,750,750);
+//            stop(500);
         }
         else if (tagOfInterest.id == MIDDLE) {
             //trajectory for MIDDLE
-            encoderDrive (0.3, 800, 800,800,800);
-            stop(1000);
+            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
+            turnToHeading(TURN_SPEED, -90.0);
+            holdHeading(TURN_SPEED, -90.0, 1.25);
+            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            holdHeading( TURN_SPEED, -90.0, 0.5);
+            turnToHeading(TURN_SPEED, -43.0);
+            holdHeading( TURN_SPEED, -43.0, 0.5);
+            //to do: raise lift to high pole
+            liftTarget = -6000; // change value, guesstimating rn
+            liftSpeed = 0.98;
+            liftCurrentDirection = "up";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(4000);
+
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+            runTime.reset();
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
+                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
+                if(runTime.time() > 5){
+                    break;
+                }
+            }
+            // lower lift a little bit so cone hits the pole
+            liftTarget = -5000; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(2000);
+            robot.roller.setPower(-0.5);
+            sleep(1000);
+
+            liftTarget = 0; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(3000);
+
+            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
+            turnToHeading(TURN_SPEED, 43.0);
+            holdHeading( TURN_SPEED, 43.0, 0.5);
+            encoderDrive(-DRIVE_SPEED,-800,-800,-800,-800);
+            // NEEDS CHANGING
+//            encoderDrive (0.3, 800, 800,800,800);
+//            stop(1000);
         }
         else {
             //trajectory for RIGHT
-            encoderDrive (0.3, 800,800,800,800);
-            stop(1000);
-            encoderDrive (0.3, 412, -412, 412, -412);
-            stop(1000);
-            encoderDrive (0.3, 750,750,750,750);
-            stop(1000);
+            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
+            turnToHeading(TURN_SPEED, -90.0);
+            holdHeading(TURN_SPEED, -90.0, 1.25);
+            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            holdHeading( TURN_SPEED, -90.0, 0.5);
+            turnToHeading(TURN_SPEED, -43.0);
+            holdHeading( TURN_SPEED, -43.0, 0.5);
+            //to do: raise lift to high pole
+            liftTarget = -6000; // change value, guesstimating rn
+            liftSpeed = 0.98;
+            liftCurrentDirection = "up";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(4000);
+            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+            runTime.reset();
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
+                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
+                if(runTime.time() > 5){
+                    break;
+                }
+            }
+
+            // lower lift a little bit so cone hits the pole
+            liftTarget = -5000; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(2000);
+            robot.roller.setPower(-0.5);
+            sleep(1000);
+
+            liftTarget = 0; // change value, guesstimating rn
+            liftSpeed = -0.98;
+            liftCurrentDirection = "down";
+            robot.lift.setPower(liftSpeed);
+            robot.lift.setTargetPosition(liftTarget);
+            sleep(3000);
+
+            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
+            turnToHeading(TURN_SPEED, 43.0);
+            holdHeading(TURN_SPEED, 43.0, 0.5);
+
+            // NEEDS CHANGING
+//            encoderDrive (0.3, 800,800,800,800);
+//            stop(1000);
+//            encoderDrive (0.3, 412, -412, 412, -412);
+//            stop(1000);
+//            encoderDrive (0.3, 750,750,750,750);
+//            stop(1000);
         }
 
         while (opModeIsActive()) {sleep(20);}
-
-        // Step through each leg of the path,
-        // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
-        //          holdHeading() is used after turns to let the heading stabilize
-        //          Add a sleep(2000) after any step to keep the telemetry data visible for review
-
-        encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
-        turnToHeading(TURN_SPEED, -90.0);
-        holdHeading(TURN_SPEED, -90.0, 1.25);
-        encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
-        holdHeading( TURN_SPEED, -90.0, 0.5);
-        turnToHeading(TURN_SPEED, -43.0);
-        holdHeading( TURN_SPEED, -43.0, 0.5);
-        //to do: raise lift to high pole
-        encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
-        runTime.reset();
-        while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
-            encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
-            if(runTime.time() > 5){
-                break;
-            }
-        }
-        //to do: drop the cone
-
 
 //            driveStraight(DRIVE_SPEED, 925, 0.0);    // Drive Forward 24"
 //            turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
