@@ -27,16 +27,16 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
     //rectangles are made from defining two opposite vertices of a triangle,
     //which are connected by the diagonals
     static final Rect leftROI = new Rect(
-            new Point( 200, 0),
-            new Point(700, 1280)
+            new Point( 100, 0),
+            new Point(700, 700)
     );
     static final Rect middleROI = new Rect(
             new Point( 640, 0),
-            new Point(960, 1280)
+            new Point(960, 700)
     );
     static final Rect rightROI = new Rect(
             new Point( 960, 0),
-            new Point(1280, 1280)
+            new Point(1200, 700)
     );
 
 
@@ -93,11 +93,11 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         else{
             elementLocation = ShippingElementLocation.UNKNOWN;
         }
-        telemetry.addData("left percentage", Math.round(leftPercentage * 100) + "%");
-        telemetry.addData("middle percentage", Math.round(middlePercentage * 100) + "%");
-        telemetry.addData("right percentage", Math.round(rightPercentage * 100) + "%");
+//        telemetry.addData("left percentage", Math.round(leftPercentage * 100) + "%");
+//        telemetry.addData("middle percentage", Math.round(middlePercentage * 100) + "%");
+//        telemetry.addData("right percentage", Math.round(rightPercentage * 100) + "%");
 
-        telemetry.update();
+        //telemetry.update();
         return mat;
 
 
