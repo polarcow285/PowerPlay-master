@@ -20,12 +20,12 @@ import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 
 @Autonomous
-public class BasicAuto extends LinearOpMode
+public class PoleAuto extends LinearOpMode
 {
     public ProjectUdon robot = new ProjectUdon();
     OpenCvCamera webcam;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-
+    PoleDetectionPipeline detector = new PoleDetectionPipeline(telemetry);
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -40,7 +40,7 @@ public class BasicAuto extends LinearOpMode
 
     // UNITS ARE METERS
 //    double tagsize = 0.166;
-      double tagsize = 0.003;
+    double tagsize = 0.003;
     int LEFT = 1; // Tag ID 1, 2, 3 from the 36h11 family
     int MIDDLE = 2;
     int RIGHT = 3;
@@ -61,6 +61,7 @@ public class BasicAuto extends LinearOpMode
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         webcam.setPipeline(aprilTagDetectionPipeline);
+        webcam.setPipeline(detector);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -147,6 +148,10 @@ public class BasicAuto extends LinearOpMode
 
          Update the telemetry*/
 
+        PoleDetectionPipeline.ShippingElementLocation elementLocation = detector.getShippingElementLocation();
+
+        telemetry.addData("Pole Location", elementLocation);
+
         if(tagOfInterest != null)
         {
             telemetry.addLine("Tag snapshot:\n");
@@ -159,37 +164,41 @@ public class BasicAuto extends LinearOpMode
         telemetry.update();
 
         // Actually do something useful
-        if (tagOfInterest == null || tagOfInterest.id == LEFT)
-        {
-            //trajectory for LEFT/DEFAULT
-            // 750 counts for 1 tile
-            // 412 counts to turn 90 degrees
+//        if (tagOfInterest == null || tagOfInterest.id == LEFT)
+//        {
+//            //trajectory for LEFT/DEFAULT
+//            // 750 counts for 1 tile
+//            // 412 counts to turn 90 degrees
+//
+//            encoderDrive (0.3, 800,800,800,800);
+//            stop(500);
+//            encoderDrive (0.3, -412, 412, -412, 412);
+//            stop(500);
+//            encoderDrive (0.3, 750,750,750,750);
+//            stop(500);
+//        }
+//        else if (tagOfInterest.id == MIDDLE) {
+//            //trajectory for MIDDLE
+//            encoderDrive (0.3, 800, 800,800,800);
+//            stop(1000);
+//        }
+//        else {
+//            //trajectory for RIGHT
+//            encoderDrive (0.3, 800,800,800,800);
+//            stop(1000);
+//            encoderDrive (0.3, 412, -412, 412, -412);
+//            stop(1000);
+//            encoderDrive (0.3, 750,750,750,750);
+//            stop(1000);
+//        }
 
-            encoderDrive (0.3, 800,800,800,800);
-            stop(500);
-            encoderDrive (0.3, -412, 412, -412, 412);
-            stop(500);
-            encoderDrive (0.3, 750,750,750,750);
-            stop(500);
+        // DRIVE TO AND LINE UP WITH POLE
+        if(elementLocation != PoleDetectionPipeline.ShippingElementLocation.MIDDLE){
+            robot.frontright.setPower(0.25);
+            robot.backright.setPower(0.25);
+            robot.frontleft.setPower(-0.25);
+            robot.backleft.setPower(-0.25);
         }
-        else if (tagOfInterest.id == MIDDLE) {
-            //trajectory for MIDDLE
-            encoderDrive (0.3, 800, 800,800,800);
-            stop(1000);
-        }
-        else {
-            //trajectory for RIGHT
-            encoderDrive (0.3, 800,800,800,800);
-            stop(1000);
-            encoderDrive (0.3, 412, -412, 412, -412);
-            stop(1000);
-            encoderDrive (0.3, 750,750,750,750);
-            stop(1000);
-        }
-
-        //You wouldn't have this in your autonomous, this is just to prevent the sample from ending
-         // DELETE FOR PROD
-        while (opModeIsActive()) {sleep(20);}
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -249,6 +258,7 @@ public class BasicAuto extends LinearOpMode
                         robot.frontright.getCurrentPosition(),
                         robot.backleft.getCurrentPosition(),
                         robot.backright.getCurrentPosition());
+                telemetry.addData("Pole Location", detector.getShippingElementLocation());
                 telemetry.update();
             }
 
