@@ -184,6 +184,15 @@ public class CONtrols extends LinearOpMode {
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
             }
+            else if (gamepad2.right_stick_y > 0 ) {
+                robot.lift.setPower(gamepad2.right_stick_y);
+            }
+            else if (gamepad2.right_stick_y < 0) {
+                robot.lift.setPower(gamepad2.right_stick_y);
+            }
+            else {
+                robot.lift.setPower(0);
+            }
 
             // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
 //            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){

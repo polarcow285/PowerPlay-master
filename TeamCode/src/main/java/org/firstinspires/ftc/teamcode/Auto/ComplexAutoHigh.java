@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @Autonomous
-public class ComplexAuto extends LinearOpMode {
+public class ComplexAutoHigh extends LinearOpMode {
 
     public ProjectUdon robot = new ProjectUdon();
     private Orientation lastAngles = new Orientation();
