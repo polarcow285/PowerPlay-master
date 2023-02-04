@@ -134,7 +134,7 @@ public class CONtrols extends LinearOpMode {
 
             // lift code
 
-            if (robot.lift.getCurrentPosition()>-2000 && gamepad2.x) { // Arm UP
+            /*if (robot.lift.getCurrentPosition()>-2000 && gamepad2.x) { // Arm UP
                 liftTarget = -2000;
                 liftSpeed = 0.98;
                 liftCurrentDirection = "up";
@@ -184,16 +184,7 @@ public class CONtrols extends LinearOpMode {
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
             }
-            else if (gamepad2.right_stick_y > 0 ) {
-                robot.lift.setPower(gamepad2.right_stick_y);
-            }
-            else if (gamepad2.right_stick_y < 0) {
-                robot.lift.setPower(gamepad2.right_stick_y);
-            }
-            else {
-                robot.lift.setPower(0);
-            }
-
+            */
             // Remove Power from the Arm Motor if motor is close to 0 position, arm should drop
 //            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){
 //                liftSpeed = 0;
@@ -203,7 +194,7 @@ public class CONtrols extends LinearOpMode {
             /** END ARM LIFT **/
 
             //Outtake sequence
-            if(gamepad2.dpad_down && robot.lift.getCurrentPosition()>50){
+            /*if(gamepad2.dpad_down && robot.lift.getCurrentPosition()>50){
                 liftTarget = robot.lift.getCurrentPosition()-50;
                 liftSpeed = -0.98;
                 liftCurrentDirection = "down";
@@ -218,7 +209,7 @@ public class CONtrols extends LinearOpMode {
 
 
             idle();
-
+            */
 
 
 
