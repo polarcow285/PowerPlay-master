@@ -41,10 +41,8 @@ public class LiftOnly extends LinearOpMode {
             // lift code
 
 
-            int high = 4100; //TEMP, 4100 is for medium poles
-            int medium = (2/3)*high;
-            int low = high/3;
-
+            int medium = 4100; //TEMP, 4100 is for medium poles
+            int low = 2000;
 
             telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
             telemetry.update();
@@ -56,48 +54,50 @@ public class LiftOnly extends LinearOpMode {
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<low && gamepad2.x) { // Arm DOWN
+            }
+            else if (robot.lift.getCurrentPosition()<low && gamepad2.x) { // Arm DOWN
                 liftTarget = low;
                 liftSpeed = 0.5;
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()>medium && gamepad2.b) { // Arm UP
+            }
+            else if (robot.lift.getCurrentPosition()>medium && gamepad2.y) { // Arm UP
                 liftTarget = medium;
                 liftSpeed = -0.5;
                 liftCurrentDirection = "up";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<medium && gamepad2.b) { // Arm DOWN
+            }
+            else if (robot.lift.getCurrentPosition()<medium && gamepad2.y) { // Arm DOWN
                 liftTarget = medium;
                 liftSpeed = 0.5;
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()>high && gamepad2.y) { // Arm UP
-                liftTarget = high;
-                liftSpeed = -0.5;
-                liftCurrentDirection = "up";
-
-                robot.lift.setPower(liftSpeed);
-                robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<high && gamepad2.y) { // Arm DOWN
-                liftTarget = high;
-                liftSpeed = 0.5;
-                liftCurrentDirection = "down";
-
-                robot.lift.setPower(liftSpeed);
-                robot.lift.setTargetPosition(liftTarget);
-            } else if (gamepad2.a){ // Arm DOWN
+            }
+            else if (gamepad2.a){ // Arm DOWN
                 liftTarget = 0;
                 liftSpeed = -0.5;  // From my research, negative is ignore, so I don't understand why this *seemed* to work
                 liftCurrentDirection = "down";
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
+            }
+
+            // lift code
+            if (gamepad2.right_bumper) {
+                //liftSpeed = 1;
+                robot.lift.setPower(0.5);
+            }
+            else if (gamepad2.left_bumper) {
+                robot.lift.setPower(-0.5);
+            }
+            else {
+                robot.lift.setPower(0);
             }
 
             //Remove Power from the Arm Motor if motor is close to 0 position, arm should drop 200
