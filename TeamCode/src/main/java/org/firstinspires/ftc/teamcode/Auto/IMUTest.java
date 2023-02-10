@@ -95,42 +95,78 @@ public class IMUTest extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
 
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         waitForStart();
         //while(opModeIsActive()) {
             // Wait for the game to start (Display Gyro value while waiting)
-            while (opModeInInit()) {
+        while (opModeInInit()) {
                 telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
                 telemetry.update();
-            }
+        }
 
             // Set the encoders for closed loop speed control, and reset the heading.
-            robot.frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            resetHeading();
+        robot.frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        resetHeading();
 
             // Step through each leg of the path,
             // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
             //          holdHeading() is used after turns to let the heading stabilize
             //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
-            turnToHeading(TURN_SPEED, -90.0);
-            holdHeading(TURN_SPEED, -90.0, 1.25);
-            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
-            holdHeading( TURN_SPEED, -90.0, 0.5);
-            turnToHeading(TURN_SPEED, -43.0);
-            holdHeading( TURN_SPEED, -43.0, 0.5);
+
+        encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
+            //turnToHeading(TURN_SPEED, -90.0);
+            //holdHeading(TURN_SPEED, -90.0, 1.25);
+            //encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            //holdHeading( TURN_SPEED, -90.0, 0.5);
+            //turnToHeading(TURN_SPEED, -43.0);
+        holdHeading( TURN_SPEED, -45.0, 0.5);
             //to do: raise lift to high pole
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+
+        robot.lift.setTargetPosition(3800);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(0.5);
+        while(opModeIsActive() && robot.lift.isBusy()){
+            telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.lift.setPower(0);
+        //encoderDrive(DRIVE_SPEED, 30, 30, 30, 30);
+
+        holdHeading( TURN_SPEED, -45.0, 0.5);
+
             runTime.reset();
             while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
-                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
+                robot.frontleft.setPower(0.15);
+                robot.frontright.setPower(0.15);
+                robot.backleft.setPower(0.15);
+                robot.backright.setPower(0.15);
+                sleep(500);
+                robot.frontleft.setPower(0);
+                robot.frontright.setPower(0);
+                robot.backleft.setPower(0);
+                robot.backright.setPower(0);
+                sleep(500);
                 if(runTime.time() > 5){
                     break;
                 }
+                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
+                telemetry.update();
             }
+        robot.lift.setTargetPosition(0);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(0.5);
+        while(opModeIsActive() && robot.lift.isBusy()){
+            telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.lift.setPower(0);
+
             //to do: drop the cone
 
 

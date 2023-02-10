@@ -41,9 +41,9 @@ public class LiftOnly extends LinearOpMode {
             // lift code
 
 
-            int high = 4100; //TEMP, 4100 is for medium poles
-            int medium = (2/3)*high;
-            int low = high/3;
+            //int high = 4100; //TEMP, 4100 is for medium poles
+            int medium = 3800;
+            int low = (int) (medium * 0.574);
 
 
             telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
@@ -77,21 +77,23 @@ public class LiftOnly extends LinearOpMode {
 
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()>high && gamepad2.y) { // Arm UP
-                liftTarget = high;
-                liftSpeed = -0.5;
-                liftCurrentDirection = "up";
-
-                robot.lift.setPower(liftSpeed);
-                robot.lift.setTargetPosition(liftTarget);
-            }else if (robot.lift.getCurrentPosition()<high && gamepad2.y) { // Arm DOWN
-                liftTarget = high;
-                liftSpeed = 0.5;
-                liftCurrentDirection = "down";
-
-                robot.lift.setPower(liftSpeed);
-                robot.lift.setTargetPosition(liftTarget);
-            } else if (gamepad2.a){ // Arm DOWN
+            }
+//            else if (robot.lift.getCurrentPosition()>high && gamepad2.y) { // Arm UP
+//                liftTarget = high;
+//                liftSpeed = -0.5;
+//                liftCurrentDirection = "up";
+//
+//                robot.lift.setPower(liftSpeed);
+//                robot.lift.setTargetPosition(liftTarget);
+//            }else if (robot.lift.getCurrentPosition()<high && gamepad2.y) { // Arm DOWN
+//                liftTarget = high;
+//                liftSpeed = 0.5;
+//                liftCurrentDirection = "down";
+//
+//                robot.lift.setPower(liftSpeed);
+//                robot.lift.setTargetPosition(liftTarget);
+//            }
+            else if (gamepad2.a){ // Arm DOWN
                 liftTarget = 0;
                 liftSpeed = -0.5;  // From my research, negative is ignore, so I don't understand why this *seemed* to work
                 liftCurrentDirection = "down";
