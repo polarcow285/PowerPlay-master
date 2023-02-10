@@ -39,12 +39,14 @@ public class LiftNoLimit extends LinearOpMode {
             }
 
             // lift code
-            if (gamepad2.y) {
+            if (gamepad2.right_bumper) {
                 //liftSpeed = 1;
                 robot.lift.setPower(0.5);
-            } else if (gamepad2.a) {
+            }
+            else if (gamepad2.left_bumper) {
                 robot.lift.setPower(-0.5);
-            } else {
+            }
+            else {
                 robot.lift.setPower(0);
             }
 

@@ -102,11 +102,11 @@ public class CONtrols extends LinearOpMode {
 
             // roller code
             //intake
-            if (gamepad2.right_bumper && !robot.rollerSwitch.getState()) {
+            if (gamepad2.a && !robot.rollerSwitch.getState()) {
                 robot.roller.setPower(0.5);
             }
             //outtake
-            else if (gamepad2.left_bumper) {
+            else if (gamepad2.y) {
                 robot.roller.setPower(-0.5);
             }
             else {
@@ -114,11 +114,11 @@ public class CONtrols extends LinearOpMode {
             }
 
             // lift code
-            if (gamepad2.y && robot.lift.getCurrentPosition()<4100) {
+            if (gamepad2.right_bumper && robot.lift.getCurrentPosition()<4100) {
                 //liftSpeed = 1;
                 robot.lift.setPower(0.75);
             }
-            else if(gamepad2.a && robot.lift.getCurrentPosition()>0){
+            else if(gamepad2.left_bumper && robot.lift.getCurrentPosition()>0){
                 robot.lift.setPower(-0.50);
             }
             else{
