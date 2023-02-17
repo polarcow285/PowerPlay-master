@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @TeleOp(name="CONtrols", group="Mecanum")
@@ -131,6 +133,7 @@ public class CONtrols extends LinearOpMode {
 
             telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
             telemetry.addData("Intake roller switch", robot.rollerSwitch.getState());
+            telemetry.addData("Distance sensor", robot.distance.getDistance(DistanceUnit.INCH));
 
             // lift code
 
