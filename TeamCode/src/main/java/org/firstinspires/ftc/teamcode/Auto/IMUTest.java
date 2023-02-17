@@ -124,9 +124,14 @@ public class IMUTest extends LinearOpMode {
             //holdHeading(TURN_SPEED, -90.0, 1.25);
             //encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
             //holdHeading( TURN_SPEED, -90.0, 0.5);
-        turnToHeading(TURN_SPEED, -44.0);
-        holdHeading( TURN_SPEED, -44.0, 0.5);
-            //to do: raise lift to high pole
+
+        //turn 44 degrees
+        turnToHeading(TURN_SPEED, -43.5);
+        holdHeading( TURN_SPEED, -43.5, 0.5);
+
+
+        encoderDrive(DRIVE_SPEED, 125, 125, 125, 125);
+        //to do: raise lift to high pole
 
         robot.lift.setTargetPosition(3800);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -143,12 +148,15 @@ public class IMUTest extends LinearOpMode {
         //holdHeading( TURN_SPEED, -43.0, 0.5);
 
             runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 20){
-                robot.frontleft.setPower(0.1);
-                robot.frontright.setPower(0.1);
-                robot.backleft.setPower(0.1);
-                robot.backright.setPower(0.1);
-
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 25){
+                robot.frontleft.setPower(0.05);
+                robot.frontright.setPower(0.05);
+                robot.backleft.setPower(0.05);
+                robot.backright.setPower(0.05);
+                if(robot.distance.getDistance(DistanceUnit.INCH) < 24){
+                    telemetry.addData("Distance sensor:", "Pole Detected");
+                    telemetry.update();
+                }
                 if(runTime.time() > 7){
 
                     break;
@@ -161,19 +169,36 @@ public class IMUTest extends LinearOpMode {
         robot.backleft.setPower(0);
         robot.backright.setPower(0);
         sleep(500);
-            robot.lift.setTargetPosition(3750);
-            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //lower lift a litte
+        robot.lift.setTargetPosition(3000);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.5);
+        while(opModeIsActive() && robot.lift.isBusy()){
+            telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.lift.setPower(0);
+
+        //outtake cone
+        robot.roller.setPower(-0.5);
+        sleep(1000);
+        robot.roller.setPower(0);
+        sleep(500);
+
+        //move backwards
         robot.frontleft.setPower(-0.1);
         robot.frontright.setPower(-0.1);
         robot.backleft.setPower(-0.1);
         robot.backright.setPower(-0.1);
-        sleep(500);
+        sleep(1500);
         robot.frontleft.setPower(0);
         robot.frontright.setPower(0);
         robot.backleft.setPower(0);
         robot.backright.setPower(0);
         sleep(1000);
+
+        //lower lift
         robot.lift.setTargetPosition(0);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(0.5);
