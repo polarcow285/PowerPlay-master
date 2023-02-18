@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -30,6 +31,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -40,24 +42,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.ArrayList;
 
-// april tag stuff
-import org.firstinspires.ftc.teamcode.Vision.PoleDetectionPipeline;
-import org.firstinspires.ftc.teamcode.Vision.AprilTagDetectionPipeline;
-import org.openftc.apriltag.AprilTagDetection;
-import org.openftc.easyopencv.OpenCvCamera;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @Autonomous
-public class ComplexAutoHigh extends LinearOpMode {
+public class ComplexAuto extends LinearOpMode {
 
     public ProjectUdon robot = new ProjectUdon();
     private Orientation lastAngles = new Orientation();
+    Gamepad currentGamepad2 = new Gamepad();
+    Gamepad previousGamepad2 = new Gamepad();
     double  globalAngle, power = .30, correction;
     OpenCvCamera webcam;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-    PoleDetectionPipeline detector = new PoleDetectionPipeline(telemetry);
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -126,6 +122,9 @@ public class ComplexAutoHigh extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        TileLocation t = TileLocation.Left;
+        boolean isLeftTile = true;
+
         robot.frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -139,7 +138,6 @@ public class ComplexAutoHigh extends LinearOpMode {
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         webcam.setPipeline(aprilTagDetectionPipeline);
-        webcam.setPipeline(detector);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -162,6 +160,26 @@ public class ComplexAutoHigh extends LinearOpMode {
 
         while (!isStarted() && !isStopRequested())
         {
+//            try {
+//                previousGamepad2.copy(currentGamepad2);
+//                currentGamepad2.copy(gamepad1);
+//                RobotCoreException e = new RobotCoreException();
+//                throw e;
+//            }
+//            catch (RobotCoreException e) {
+//
+//            }
+            if (currentGamepad2.y && !previousGamepad2.y) {
+                isLeftTile = !isLeftTile;
+            }
+            if (isLeftTile) {
+                t = TileLocation.Left;
+            }
+            else {
+                t = TileLocation.Right;
+            }
+            telemetry.addData("Tile Location", t);
+
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if(currentDetections.size() != 0)
@@ -219,7 +237,6 @@ public class ComplexAutoHigh extends LinearOpMode {
             sleep(20);
         }
 
-        PoleDetectionPipeline.ShippingElementLocation elementLocation = detector.getShippingElementLocation();
 
         //while(opModeIsActive()) {
         // Wait for the game to start (Display Gyro value while waiting)
@@ -227,6 +244,7 @@ public class ComplexAutoHigh extends LinearOpMode {
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
             telemetry.update();
         }
+
 
         // Set the encoders for closed loop speed control, and reset the heading.
         robot.frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -259,51 +277,133 @@ public class ComplexAutoHigh extends LinearOpMode {
             //          holdHeading() is used after turns to let the heading stabilize
             //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
-            encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
-            turnToHeading(TURN_SPEED, -90.0);
-            holdHeading(TURN_SPEED, -90.0, 1.25);
-            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
-            holdHeading( TURN_SPEED, -90.0, 0.5);
-            turnToHeading(TURN_SPEED, -43.0);
-            holdHeading( TURN_SPEED, -43.0, 0.5);
-            //to do: raise lift to high pole
-            liftTarget = -6000; // change value, guesstimating rn
-            liftSpeed = 0.98;
-            liftCurrentDirection = "up";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(4000);
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
-            runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
-                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
-                if(runTime.time() > 5){
-                    break;
-                }
+            robot.lift.setTargetPosition(600);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
             }
+            robot.lift.setPower(0);
+            sleep(500);
 
-            //to do: drop the cone
-            // lower lift a little bit so cone hits the pole
-            liftTarget = -5000; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(2000);
+            encoderDrive(DRIVE_SPEED, 1300, 1300, 1300, 1300);
+            encoderDrive(-DRIVE_SPEED, -450, -450, -450, -450);
+            //turnToHeading(TURN_SPEED, -90.0);
+            //holdHeading(TURN_SPEED, -90.0, 1.25);
+            //encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            //holdHeading( TURN_SPEED, -90.0, 0.5);
+
+            //turn 44 degrees
+            turnToHeading(TURN_SPEED, 39.5);
+            holdHeading( TURN_SPEED, 41.0, 0.5);
+
+
+            encoderDrive(DRIVE_SPEED, 125*2.5, 125*2.5, 125*2.5, 125*2.5);
+            //to do: raise lift to high pole
+
+            robot.lift.setTargetPosition(3800);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+            sleep(500);
+
+            //encoderDrive(DRIVE_SPEED, 30, 30, 30, 30);
+
+            //holdHeading( TURN_SPEED, -43.0, 0.5);
+
+            runTime.reset();
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 17){
+                robot.frontleft.setPower(0.10);
+                robot.frontright.setPower(0.10);
+                robot.backleft.setPower(0.10);
+                robot.backright.setPower(0.10);
+                sleep(150*3);
+                robot.frontleft.setPower(0.15);
+                robot.frontright.setPower(-0.15);
+                robot.backleft.setPower(0.15);
+                robot.backright.setPower(-0.15);
+                sleep(150*3);
+                robot.frontleft.setPower(0);
+                robot.frontright.setPower(0);
+                robot.backleft.setPower(0);
+                robot.backright.setPower(0);
+                sleep(50*3);
+                robot.frontleft.setPower(-0.15);
+                robot.frontright.setPower(0.15);
+                robot.backleft.setPower(-0.15);
+                robot.backright.setPower(0.15);
+                sleep(200*3);
+                robot.frontleft.setPower(0);
+                robot.frontright.setPower(0);
+                robot.backleft.setPower(0);
+                robot.backright.setPower(0);
+                sleep(50*3);
+                robot.frontleft.setPower(0.15);
+                robot.frontright.setPower(-0.15);
+                robot.backleft.setPower(0.15);
+                robot.backright.setPower(-0.15);
+                sleep(100*3);
+
+//                if(runTime.time() > 8){
+//
+//                    break;
+//                }
+                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
+                telemetry.update();
+            }
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(500);
+
+            //lower lift a litte
+            robot.lift.setTargetPosition(3000);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            //outtake cone
             robot.roller.setPower(-0.5);
             sleep(1000);
+            robot.roller.setPower(0);
+            sleep(500);
 
-            liftTarget = 0; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(3000);
+            //move backwards
+            robot.frontleft.setPower(-0.1);
+            robot.frontright.setPower(-0.1);
+            robot.backleft.setPower(-0.1);
+            robot.backright.setPower(-0.1);
+            sleep(1500);
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(1000);
 
-            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
-            turnToHeading(TURN_SPEED, 43.0);
-            holdHeading( TURN_SPEED, 43.0, 0.5);
-            encoderDrive(-DRIVE_SPEED, -1700, -1700, -1700, -1700);
+            //lower lift
+            robot.lift.setTargetPosition(0);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            encoderDrive(-DRIVE_SPEED, -150, -150, -150, -150);
+            turnToHeading(TURN_SPEED, 90);
+            holdHeading(TURN_SPEED, 90.0, 0.5);
+            encoderDrive(DRIVE_SPEED, 650, 650, 650, 650);
 
             // NEEDS CHANGING
 //            encoderDrive (0.3, 800,800,800,800);
@@ -316,49 +416,98 @@ public class ComplexAutoHigh extends LinearOpMode {
         else if (tagOfInterest.id == MIDDLE) {
             //trajectory for MIDDLE
             encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
-            turnToHeading(TURN_SPEED, -90.0);
-            holdHeading(TURN_SPEED, -90.0, 1.25);
-            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
-            holdHeading( TURN_SPEED, -90.0, 0.5);
-            turnToHeading(TURN_SPEED, -43.0);
-            holdHeading( TURN_SPEED, -43.0, 0.5);
-            //to do: raise lift to high pole
-            liftTarget = -6000; // change value, guesstimating rn
-            liftSpeed = 0.98;
-            liftCurrentDirection = "up";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(4000);
+            //turnToHeading(TURN_SPEED, -90.0);
+            //holdHeading(TURN_SPEED, -90.0, 1.25);
+            //encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            //holdHeading( TURN_SPEED, -90.0, 0.5);
 
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+            //turn 44 degrees
+            turnToHeading(TURN_SPEED, -43.5);
+            holdHeading( TURN_SPEED, -43.5, 0.5);
+
+
+            encoderDrive(DRIVE_SPEED, 125, 125, 125, 125);
+            //to do: raise lift to high pole
+
+            robot.lift.setTargetPosition(3800);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+            sleep(500);
+
+            //encoderDrive(DRIVE_SPEED, 30, 30, 30, 30);
+
+            //holdHeading( TURN_SPEED, -43.0, 0.5);
+
             runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
-                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
-                if(runTime.time() > 5){
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 25){
+                robot.frontleft.setPower(0.05);
+                robot.frontright.setPower(0.05);
+                robot.backleft.setPower(0.05);
+                robot.backright.setPower(0.05);
+                if(robot.distance.getDistance(DistanceUnit.INCH) < 24){
+                    telemetry.addData("Distance sensor:", "Pole Detected");
+                    telemetry.update();
+                }
+                if(runTime.time() > 7){
+
                     break;
                 }
+                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
+                telemetry.update();
             }
-            // lower lift a little bit so cone hits the pole
-            liftTarget = -5000; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(2000);
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(500);
+
+            //lower lift a litte
+            robot.lift.setTargetPosition(3000);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            //outtake cone
             robot.roller.setPower(-0.5);
             sleep(1000);
+            robot.roller.setPower(0);
+            sleep(500);
 
-            liftTarget = 0; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(3000);
+            //move backwards
+            robot.frontleft.setPower(-0.1);
+            robot.frontright.setPower(-0.1);
+            robot.backleft.setPower(-0.1);
+            robot.backright.setPower(-0.1);
+            sleep(1500);
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(1000);
 
-            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
-            turnToHeading(TURN_SPEED, 43.0);
-            holdHeading( TURN_SPEED, 43.0, 0.5);
-            encoderDrive(-DRIVE_SPEED,-800,-800,-800,-800);
+            //lower lift
+            robot.lift.setTargetPosition(0);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            encoderDrive(-DRIVE_SPEED, -200, -200, -200, -200);
+//            turnToHeading(TURN_SPEED, 63.0);
+//            holdHeading( TURN_SPEED, 63.0, 0.5);
+//            encoderDrive(-DRIVE_SPEED,-800,-800,-800,-800);
             // NEEDS CHANGING
 //            encoderDrive (0.3, 800, 800,800,800);
 //            stop(1000);
@@ -366,48 +515,98 @@ public class ComplexAutoHigh extends LinearOpMode {
         else {
             //trajectory for RIGHT
             encoderDrive(DRIVE_SPEED, 850, 850, 850, 850);
-            turnToHeading(TURN_SPEED, -90.0);
-            holdHeading(TURN_SPEED, -90.0, 1.25);
-            encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
-            holdHeading( TURN_SPEED, -90.0, 0.5);
-            turnToHeading(TURN_SPEED, -43.0);
-            holdHeading( TURN_SPEED, -43.0, 0.5);
+            //turnToHeading(TURN_SPEED, -90.0);
+            //holdHeading(TURN_SPEED, -90.0, 1.25);
+            //encoderDrive(DRIVE_SPEED, 800, 800, 800, 800);
+            //holdHeading( TURN_SPEED, -90.0, 0.5);
+
+            //turn 44 degrees
+            turnToHeading(TURN_SPEED, -43.5);
+            holdHeading( TURN_SPEED, -43.5, 0.5);
+
+
+            encoderDrive(DRIVE_SPEED, 125, 125, 125, 125);
             //to do: raise lift to high pole
-            liftTarget = -6000; // change value, guesstimating rn
-            liftSpeed = 0.98;
-            liftCurrentDirection = "up";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(4000);
-            encoderDrive(DRIVE_SPEED, 10, 10, 10, 10);
+
+            robot.lift.setTargetPosition(3800);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+            sleep(500);
+
+            //encoderDrive(DRIVE_SPEED, 30, 30, 30, 30);
+
+            //holdHeading( TURN_SPEED, -43.0, 0.5);
+
             runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 6){
-                encoderDrive(DRIVE_SPEED, 5, 5, 5, 5);
-                if(runTime.time() > 5){
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 25){
+                robot.frontleft.setPower(0.05);
+                robot.frontright.setPower(0.05);
+                robot.backleft.setPower(0.05);
+                robot.backright.setPower(0.05);
+                if(robot.distance.getDistance(DistanceUnit.INCH) < 24){
+                    telemetry.addData("Distance sensor:", "Pole Detected");
+                    telemetry.update();
+                }
+                if(runTime.time() > 7){
+
                     break;
                 }
+                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
+                telemetry.update();
             }
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(500);
 
-            // lower lift a little bit so cone hits the pole
-            liftTarget = -5000; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(2000);
+            //lower lift a litte
+            robot.lift.setTargetPosition(3000);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            //outtake cone
             robot.roller.setPower(-0.5);
             sleep(1000);
+            robot.roller.setPower(0);
+            sleep(500);
 
-            liftTarget = 0; // change value, guesstimating rn
-            liftSpeed = -0.98;
-            liftCurrentDirection = "down";
-            robot.lift.setPower(liftSpeed);
-            robot.lift.setTargetPosition(liftTarget);
-            sleep(3000);
+            //move backwards
+            robot.frontleft.setPower(-0.1);
+            robot.frontright.setPower(-0.1);
+            robot.backleft.setPower(-0.1);
+            robot.backright.setPower(-0.1);
+            sleep(1500);
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(1000);
 
-            encoderDrive(-DRIVE_SPEED, -50, -50, -50, -50);
-            turnToHeading(TURN_SPEED, 43.0);
-            holdHeading(TURN_SPEED, 43.0, 0.5);
+            //lower lift
+            robot.lift.setTargetPosition(0);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            encoderDrive(-DRIVE_SPEED, -200, -200, -200, -200);
+            turnToHeading(TURN_SPEED, -90);
+            holdHeading(TURN_SPEED, -90, 0.5);
+            encoderDrive(DRIVE_SPEED, 550,550,550,550);
 
             // NEEDS CHANGING
 //            encoderDrive (0.3, 800,800,800,800);
@@ -418,7 +617,8 @@ public class ComplexAutoHigh extends LinearOpMode {
 //            stop(1000);
         }
 
-        while (opModeIsActive()) {sleep(20);}
+        while (opModeIsActive()) {
+            sleep(20);}
 
 //            driveStraight(DRIVE_SPEED, 925, 0.0);    // Drive Forward 24"
 //            turnToHeading( TURN_SPEED, -90.0);               // Turn  CW to -45 Degrees
@@ -443,6 +643,11 @@ public class ComplexAutoHigh extends LinearOpMode {
         //}
     }
 
+    // enum for which tile location
+    enum TileLocation {
+        Right,
+        Left
+    }
 
     /**
      * Resets the cumulative angle tracking to zero.

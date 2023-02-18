@@ -116,14 +116,14 @@ public class CONtrols extends LinearOpMode {
             }
 
             // lift code
-            if (gamepad2.right_bumper && robot.lift.getCurrentPosition()<4100) {
+            if (gamepad2.right_bumper && robot.lift.getCurrentPosition()<3800) {
                 //liftSpeed = 1;
                 robot.lift.setPower(0.75);
             }
-            else if(gamepad2.left_bumper && robot.lift.getCurrentPosition()>0){
+            else if (gamepad2.left_bumper && robot.lift.getCurrentPosition()>0){
                 robot.lift.setPower(-0.50);
             }
-            else{
+            else {
                 robot.lift.setPower(0);
             }
 
