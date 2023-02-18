@@ -295,11 +295,11 @@ public class ComplexAuto extends LinearOpMode {
             //holdHeading( TURN_SPEED, -90.0, 0.5);
 
             //turn 44 degrees
-            turnToHeading(TURN_SPEED, 39.5);
-            holdHeading( TURN_SPEED, 41.0, 0.5);
+            turnToHeading(TURN_SPEED, 35);
+            holdHeading( TURN_SPEED, 35, 0.5);
 
 
-            encoderDrive(DRIVE_SPEED, 125*2.5, 125*2.5, 125*2.5, 125*2.5);
+            encoderDrive(DRIVE_SPEED, 125*2, 125*2, 125*2, 125*2);
             //to do: raise lift to high pole
 
             robot.lift.setTargetPosition(3800);
@@ -317,7 +317,7 @@ public class ComplexAuto extends LinearOpMode {
             //holdHeading( TURN_SPEED, -43.0, 0.5);
 
             runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 17){
+            while(robot.distance.getDistance(DistanceUnit.INCH) > 22 && robot.distance.getDistance(DistanceUnit.INCH) < 24){
                 robot.frontleft.setPower(0.10);
                 robot.frontright.setPower(0.10);
                 robot.backleft.setPower(0.10);
@@ -400,7 +400,7 @@ public class ComplexAuto extends LinearOpMode {
             }
             robot.lift.setPower(0);
 
-            encoderDrive(-DRIVE_SPEED, -150, -150, -150, -150);
+            encoderDrive(-DRIVE_SPEED, -25, -25, -25, -25);
             turnToHeading(TURN_SPEED, 90);
             holdHeading(TURN_SPEED, 90.0, 0.5);
             encoderDrive(DRIVE_SPEED, 650, 650, 650, 650);
@@ -444,27 +444,27 @@ public class ComplexAuto extends LinearOpMode {
             //holdHeading( TURN_SPEED, -43.0, 0.5);
 
             runTime.reset();
-            while(robot.distance.getDistance(DistanceUnit.INCH) > 25){
-                robot.frontleft.setPower(0.05);
-                robot.frontright.setPower(0.05);
-                robot.backleft.setPower(0.05);
-                robot.backright.setPower(0.05);
-                if(robot.distance.getDistance(DistanceUnit.INCH) < 24){
-                    telemetry.addData("Distance sensor:", "Pole Detected");
-                    telemetry.update();
-                }
-                if(runTime.time() > 7){
-
-                    break;
-                }
-                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
-                telemetry.update();
-            }
-            robot.frontleft.setPower(0);
-            robot.frontright.setPower(0);
-            robot.backleft.setPower(0);
-            robot.backright.setPower(0);
-            sleep(500);
+//            while(robot.distance.getDistance(DistanceUnit.INCH) > 25){
+//                robot.frontleft.setPower(0.05);
+//                robot.frontright.setPower(0.05);
+//                robot.backleft.setPower(0.05);
+//                robot.backright.setPower(0.05);
+//                if(robot.distance.getDistance(DistanceUnit.INCH) < 24){
+//                    telemetry.addData("Distance sensor:", "Pole Detected");
+//                    telemetry.update();
+//                }
+//                if(runTime.time() > 7){
+//
+//                    break;
+//                }
+//                telemetry.addData("Distance sensor: ", robot.distance.getDistance(DistanceUnit.INCH));
+//                telemetry.update();
+//            }
+//            robot.frontleft.setPower(0);
+//            robot.frontright.setPower(0);
+//            robot.backleft.setPower(0);
+//            robot.backright.setPower(0);
+//            sleep(500);
 
             //lower lift a litte
             robot.lift.setTargetPosition(3000);
