@@ -25,6 +25,13 @@ public class LiftOnly extends LinearOpMode {
         double liftSpeed = 0;
         String liftCurrentDirection = "up";
 
+        robot.lift.setTargetPosition(0);
+        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -41,13 +48,27 @@ public class LiftOnly extends LinearOpMode {
             // lift code
 
 
-            //int high = 4100; //TEMP, 4100 is for medium poles
-            int medium = 3800;
-            int low = (int) (medium * 0.453);
+            int high = 3000; //TEMP, 4100 is for medium poles
+            int medium = 2000;
+            int low = 1000;
 
 
             telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
             telemetry.update();
+
+            if (gamepad2.right_bumper && robot.lift.getCurrentPosition()<3800) {
+                //liftSpeed = 1;
+                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.setPower(0.75);
+            }
+            else if (gamepad2.left_bumper && robot.lift.getCurrentPosition()>0){
+                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.setPower(-0.50);
+            }
+            else {
+                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.setPower(0);
+            }
 
             if (robot.lift.getCurrentPosition()<low && gamepad2.x) { // Arm UP
                 liftTarget = low;
@@ -78,21 +99,21 @@ public class LiftOnly extends LinearOpMode {
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
             }
-//            else if (robot.lift.getCurrentPosition()>high && gamepad2.y) { // Arm UP
-//                liftTarget = high;
-//                liftSpeed = -0.5;
-//                liftCurrentDirection = "up";
-//
-//                robot.lift.setPower(liftSpeed);
-//                robot.lift.setTargetPosition(liftTarget);
-//            }else if (robot.lift.getCurrentPosition()<high && gamepad2.y) { // Arm DOWN
-//                liftTarget = high;
-//                liftSpeed = 0.5;
-//                liftCurrentDirection = "down";
-//
-//                robot.lift.setPower(liftSpeed);
-//                robot.lift.setTargetPosition(liftTarget);
-//            }
+            else if (robot.lift.getCurrentPosition()<high && gamepad2.y) { // Arm UP
+                liftTarget = high;
+                liftSpeed = 0.5;
+                liftCurrentDirection = "up";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }else if (robot.lift.getCurrentPosition()>high && gamepad2.y) { // Arm DOWN
+                liftTarget = high;
+                liftSpeed = -0.5;
+                liftCurrentDirection = "down";
+
+                robot.lift.setPower(liftSpeed);
+                robot.lift.setTargetPosition(liftTarget);
+            }
             else if (robot.lift.getCurrentPosition() > 0 && gamepad2.a) { // Arm DOWN
                 liftTarget = 0;
                 liftSpeed = -0.5;  // From my research, negative is ignore, so I don't understand why this *seemed* to work
@@ -107,21 +128,21 @@ public class LiftOnly extends LinearOpMode {
 
 
             //Remove Power from the Arm Motor if motor is close to 0 position, arm should drop 200
-            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){
-                liftSpeed = 0;
-                robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+//            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){
+//                liftSpeed = 0;
+//                robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            }
 
             /** END ARM LIFT **/
 
 
-            //idle();
+            idle();
 
             // Arm Lift Telemetry
-            /*if(robot.lift.isBusy() ){
+            if(robot.lift.isBusy() ){
                 telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
                 telemetry.update();
-            }*/
+            }
         }
 
     }
