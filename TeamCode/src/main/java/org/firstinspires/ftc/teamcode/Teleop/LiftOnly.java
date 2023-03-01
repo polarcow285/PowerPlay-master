@@ -57,17 +57,12 @@ public class LiftOnly extends LinearOpMode {
             telemetry.update();
 
             if (gamepad2.right_bumper && robot.lift.getCurrentPosition()<3800) {
-                //liftSpeed = 1;
-                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.lift.setPower(0.75);
+                robot.lift.setPower(0.5);
+                robot.lift.setTargetPosition(robot.lift.getCurrentPosition() + 400);
             }
             else if (gamepad2.left_bumper && robot.lift.getCurrentPosition()>0){
-                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.lift.setPower(-0.50);
-            }
-            else {
-                robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.lift.setPower(0);
+                robot.lift.setPower(-0.5);
+                robot.lift.setTargetPosition(robot.lift.getCurrentPosition() - 400);
             }
 
             if (robot.lift.getCurrentPosition()<low && gamepad2.x) { // Arm UP
@@ -122,18 +117,7 @@ public class LiftOnly extends LinearOpMode {
                 robot.lift.setPower(liftSpeed);
                 robot.lift.setTargetPosition(liftTarget);
             }
-//            else if (robot.lift.getCurrentPosition()<=0){
-//                robot.lift.setPower(0);
-//            }
 
-
-            //Remove Power from the Arm Motor if motor is close to 0 position, arm should drop 200
-//            if ( liftCurrentDirection == "down" && ( robot.lift.getTargetPosition() < 5 ) ){
-//                liftSpeed = 0;
-//                robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            }
-
-            /** END ARM LIFT **/
 
 
             idle();
