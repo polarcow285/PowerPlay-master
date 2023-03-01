@@ -8,19 +8,23 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-
+//OpenCV to cycle a cone during autonomous
 public class PoleDetectionPipeline extends OpenCvPipeline {
     Telemetry telemetry;
     //video frame of camera, is our input for processFrame()
     Mat mat = new Mat();
 
-    public enum ShippingElementLocation {
+    public enum PoleLocation {
         LEFT,
         MIDDLE,
         RIGHT,
         UNKNOWN
     }
-    private ShippingElementLocation elementLocation;
+
+    private boolean closeToPole = false;
+
+
+    private PoleLocation elementLocation;
 
     //defining regions of interest (ROI)
     //Divide the camera frame into three rectangles
@@ -28,14 +32,15 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
     //which are connected by the diagonals
     static final Rect leftROI = new Rect(
             new Point( 100, 0),
-            new Point(700, 700)
+            new Point(500, 700)
     );
+    //middleROI is really small to make sure our robot is aligned with the robot
     static final Rect middleROI = new Rect(
-            new Point( 640, 0),
-            new Point(960, 700)
+            new Point( 500, 0),
+            new Point(800, 700)
     );
     static final Rect rightROI = new Rect(
-            new Point( 960, 0),
+            new Point( 800, 0),
             new Point(1200, 700)
     );
 
@@ -51,15 +56,13 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //define HSV range to identify the color yellow
-        Scalar lowHSV = new Scalar (30, 100, 10);
-        Scalar highHSV = new Scalar(80, 255, 255);
+        Scalar lowHSV = new Scalar (20, 100, 100);
+        Scalar highHSV = new Scalar(90, 255, 255);
 
         //applies a threshold (everything that is yellow will be white,
         // everything else will be black)
         //returns a new mat with this threshold
         Core.inRange(mat,lowHSV, highHSV, mat);
-
-
 
         //extract regions of interest from camera frame
         //submat = sub-matrix, a portion of the original
@@ -67,44 +70,49 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         Mat middle = mat.submat(middleROI);
         Mat right = mat.submat(rightROI);
 
-
         //calculate what percentage of the ROI became white
         //(add all the pixels together, divide by its area, divide by 255)
         double leftPercentage = Core.sumElems(left).val[0] / leftROI.area() / 255;
         double middlePercentage = Core.sumElems(middle).val[0] / middleROI.area() / 255;
         double rightPercentage = Core.sumElems(right).val[0] / rightROI.area() / 255;
+        double polePercentage = leftPercentage + middlePercentage + rightPercentage;
 
         //deallocates the Matrix data from the memory
-
-
         left.release();
         middle.release();
         right.release();
 
         if(leftPercentage > middlePercentage && leftPercentage > rightPercentage){
-            elementLocation = ShippingElementLocation.LEFT;
+            elementLocation = PoleLocation.LEFT;
         }
         else if(middlePercentage > leftPercentage && middlePercentage > rightPercentage){
-            elementLocation = ShippingElementLocation.MIDDLE;
+            elementLocation = PoleLocation.MIDDLE;
         }
         else if(rightPercentage > leftPercentage && rightPercentage > middlePercentage){
-            elementLocation = ShippingElementLocation.RIGHT;
+            elementLocation = PoleLocation.RIGHT;
         }
         else{
-            elementLocation = ShippingElementLocation.UNKNOWN;
+            elementLocation = PoleLocation.UNKNOWN;
         }
-//        telemetry.addData("left percentage", Math.round(leftPercentage * 100) + "%");
-//        telemetry.addData("middle percentage", Math.round(middlePercentage * 100) + "%");
-//        telemetry.addData("right percentage", Math.round(rightPercentage * 100) + "%");
+        if(Math.round(polePercentage * 100) > 30){
+            closeToPole = true;
+        }
+        telemetry.addData("left percentage", Math.round(leftPercentage * 100) + "%");
+        telemetry.addData("middle percentage", Math.round(middlePercentage * 100) + "%");
+        telemetry.addData("right percentage", Math.round(rightPercentage * 100) + "%");
+        telemetry.addData("total pole percentage", Math.round(polePercentage * 100) + "%");
 
-        //telemetry.update();
+
+        telemetry.update();
         return mat;
 
-
-
     }
-    public ShippingElementLocation getShippingElementLocation(){
+
+    public PoleLocation getPoleLocation(){
         return elementLocation;
+    }
+    public boolean isCloseToPole(){
+        return closeToPole;
     }
 
 }
