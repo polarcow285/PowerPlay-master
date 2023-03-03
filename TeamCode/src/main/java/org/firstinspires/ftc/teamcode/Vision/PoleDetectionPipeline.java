@@ -18,7 +18,9 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         LEFT,
         MIDDLE,
         RIGHT,
-        UNKNOWN
+        UNKNOWN,
+//        FAR,
+        CLOSE
     }
 
     private boolean closeToPole = false;
@@ -31,7 +33,7 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
     //rectangles are made from defining two opposite vertices of a triangle,
     //which are connected by the diagonals
     static final Rect leftROI = new Rect(
-            new Point( 100, 0),
+            new Point( 0, 0),
             new Point(500, 700)
     );
     //middleROI is really small to make sure our robot is aligned with the robot
@@ -41,7 +43,7 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
     );
     static final Rect rightROI = new Rect(
             new Point( 800, 0),
-            new Point(1200, 700)
+            new Point(1280, 700)
     );
 
 
@@ -82,7 +84,10 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         middle.release();
         right.release();
 
-        if(leftPercentage > middlePercentage && leftPercentage > rightPercentage){
+        if (Math.round(polePercentage * 100) > 60) {
+            elementLocation = PoleLocation.CLOSE;
+        }
+        else if(leftPercentage > middlePercentage && leftPercentage > rightPercentage){
             elementLocation = PoleLocation.LEFT;
         }
         else if(middlePercentage > leftPercentage && middlePercentage > rightPercentage){
@@ -91,16 +96,20 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
         else if(rightPercentage > leftPercentage && rightPercentage > middlePercentage){
             elementLocation = PoleLocation.RIGHT;
         }
+//        else if(Math.round(polePercentage * 100) < 60){
+//            elementLocation = PoleLocation.FAR;
+//        }
         else{
             elementLocation = PoleLocation.UNKNOWN;
         }
-        if(Math.round(polePercentage * 100) > 30){
-            closeToPole = true;
-        }
+
         telemetry.addData("left percentage", Math.round(leftPercentage * 100) + "%");
         telemetry.addData("middle percentage", Math.round(middlePercentage * 100) + "%");
         telemetry.addData("right percentage", Math.round(rightPercentage * 100) + "%");
         telemetry.addData("total pole percentage", Math.round(polePercentage * 100) + "%");
+        telemetry.addData("Pole Location", elementLocation);
+        //telemetry.addData("total pole percentage", polePercentage);
+
 
 
         telemetry.update();
@@ -110,9 +119,6 @@ public class PoleDetectionPipeline extends OpenCvPipeline {
 
     public PoleLocation getPoleLocation(){
         return elementLocation;
-    }
-    public boolean isCloseToPole(){
-        return closeToPole;
     }
 
 }

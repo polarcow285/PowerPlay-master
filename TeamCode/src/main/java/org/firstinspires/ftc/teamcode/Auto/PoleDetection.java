@@ -54,29 +54,38 @@ public class PoleDetection extends LinearOpMode{
         waitForStart();
 
 
-        PoleDetectionPipeline.PoleLocation elementLocation = poleDetectionPipeline.getPoleLocation();
-        telemetry.addData("Pole Location", elementLocation);
-
         //NEEDS TO BE FIXED
         // DRIVE TO AND LINE UP WITH POLE
         while(poleInRange == false){
+            PoleDetectionPipeline.PoleLocation elementLocation = poleDetectionPipeline.getPoleLocation();
+
+//            if(elementLocation == PoleDetectionPipeline.PoleLocation.FAR){
+//                encoderDrive(0.25, 25, 25, 25, 25);
+//                stop(1000);
+//            }
             if(elementLocation == PoleDetectionPipeline.PoleLocation.LEFT) {
-                encoderDrive(0.25, 25, -25, 25, -25);
+                encoderDrive(0.25, -25, 25, -25, 25);
                 stop(1000);
             }
             else if (elementLocation == PoleDetectionPipeline.PoleLocation.RIGHT) {
-                encoderDrive(0.25, -25, -25, 25, 25);
+                encoderDrive(0.25, 25, -25, 25, -25);
                 stop(1000);
             } else if (elementLocation == PoleDetectionPipeline.PoleLocation.MIDDLE) {
-                //NEEDS TO BE FIXED
-                while(poleDetectionPipeline.isCloseToPole() == false) {
-                    encoderDrive(0.25, 25, 25, 25, 25);
-                    stop(1000);
-
-                }
+//                stop(2000);
+                encoderDrive(0.25, 25, 25, 25, 25);
+                stop(1000);
+//                poleInRange = true;
+            }
+            else if (elementLocation == PoleDetectionPipeline.PoleLocation.CLOSE) {
+                stop(2000);
                 poleInRange = true;
             }
+            else{
+                encoderDrive(0.25, -25, -25, -25, -25);
+                stop(1000);
+            }
         }
+
     }
 
 
