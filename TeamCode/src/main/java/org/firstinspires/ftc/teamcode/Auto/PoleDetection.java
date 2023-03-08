@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.PoleDetectionPipeline;
@@ -24,6 +25,8 @@ public class PoleDetection extends LinearOpMode{
     OpenCvCamera webcam;
     PoleDetectionPipeline poleDetectionPipeline = new PoleDetectionPipeline(telemetry);
     boolean poleInRange = false;
+    public ElapsedTime runTime = new ElapsedTime(); //sets up a timer in the program
+
 
     @Override
     public void runOpMode() {
@@ -56,6 +59,7 @@ public class PoleDetection extends LinearOpMode{
 
         //NEEDS TO BE FIXED
         // DRIVE TO AND LINE UP WITH POLE
+        runTime.reset();
         while(poleInRange == false){
             PoleDetectionPipeline.PoleLocation elementLocation = poleDetectionPipeline.getPoleLocation();
 
@@ -63,27 +67,86 @@ public class PoleDetection extends LinearOpMode{
 //                encoderDrive(0.25, 25, 25, 25, 25);
 //                stop(1000);
 //            }
+            if(runTime.time() > 7){
+
+                break;
+            }
             if(elementLocation == PoleDetectionPipeline.PoleLocation.LEFT) {
                 encoderDrive(0.25, -25, 25, -25, 25);
-                stop(1000);
+                stop(200);
             }
             else if (elementLocation == PoleDetectionPipeline.PoleLocation.RIGHT) {
                 encoderDrive(0.25, 25, -25, 25, -25);
-                stop(1000);
+                stop(200);
             } else if (elementLocation == PoleDetectionPipeline.PoleLocation.MIDDLE) {
 //                stop(2000);
                 encoderDrive(0.25, 25, 25, 25, 25);
-                stop(1000);
+                stop(200);
 //                poleInRange = true;
             }
             else if (elementLocation == PoleDetectionPipeline.PoleLocation.CLOSE) {
-                stop(2000);
+                stop(200);
                 poleInRange = true;
             }
             else{
                 encoderDrive(0.25, -25, -25, -25, -25);
-                stop(1000);
+                stop(200);
             }
+        }
+
+        if (poleInRange == true) {
+            //raise lift
+            robot.lift.setTargetPosition(3800); //needs calibration (for middle rn)
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+            sleep(250);
+
+            //lower lift a little
+            robot.lift.setTargetPosition(3000);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+
+            //outtake cone
+            robot.roller.setPower(-0.5);
+            sleep(1000);
+            robot.roller.setPower(0);
+            sleep(500);
+
+            //move backwards
+            robot.frontleft.setPower(-0.1);
+            robot.frontright.setPower(-0.1);
+            robot.backleft.setPower(-0.1);
+            robot.backright.setPower(-0.1);
+            sleep(1500);
+            robot.frontleft.setPower(0);
+            robot.frontright.setPower(0);
+            robot.backleft.setPower(0);
+            robot.backright.setPower(0);
+            sleep(1000);
+
+            //lower lift
+            robot.lift.setTargetPosition(0);
+            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.setPower(0.5);
+            while(opModeIsActive() && robot.lift.isBusy()){
+                telemetry.addData("Lift position: ", robot.lift.getCurrentPosition());
+                telemetry.update();
+            }
+            robot.lift.setPower(0);
+        }
+        else {
+            //park
+
         }
 
     }
