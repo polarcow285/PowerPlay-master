@@ -59,17 +59,17 @@ public class DriveOnly extends LinearOpMode {
 
             // Strafe Right at lower power
             if(frontLeftPower > 0 && backLeftPower < 0 && frontRightPower < 0 && backRightPower > 0){
-                robot.frontleft.setPower(frontLeftPower*0.35);
-                robot.backleft.setPower(backLeftPower*0.35);
-                robot.frontright.setPower(frontRightPower*0.35);
-                robot.backright.setPower(backRightPower*0.35);
+                robot.frontleft.setPower(frontLeftPower*0.2);
+                robot.backleft.setPower(backLeftPower*0.2);
+                robot.frontright.setPower(frontRightPower*0.2);
+                robot.backright.setPower(backRightPower*0.2);
             }
             // Strafe Left at lower power
             else if(frontLeftPower < 0 && backLeftPower > 0 && frontRightPower > 0 && backRightPower < 0){
-                robot.frontleft.setPower(frontLeftPower*0.35);
-                robot.backleft.setPower(backLeftPower*0.35);
-                robot.frontright.setPower(frontRightPower*0.35);
-                robot.backright.setPower(backRightPower*0.35);
+                robot.frontleft.setPower(frontLeftPower*0.2);
+                robot.backleft.setPower(backLeftPower*0.2);
+                robot.frontright.setPower(frontRightPower*0.2);
+                robot.backright.setPower(backRightPower*0.2);
             }
             //normal speed
             else{

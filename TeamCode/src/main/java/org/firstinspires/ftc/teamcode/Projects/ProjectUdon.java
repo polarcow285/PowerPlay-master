@@ -17,10 +17,10 @@ public class ProjectUdon extends Project{
     public DcMotor frontleft = null;
     public DcMotor backright = null;
     public DcMotor backleft = null;
-    public DistanceSensor distance = null;
-    public DcMotor roller = null;
-    public DigitalChannel rollerSwitch = null;
-    public DcMotor lift = null;
+    //public DistanceSensor distance = null;
+    //public DcMotor roller = null;
+    //public DigitalChannel rollerSwitch = null;
+    //public DcMotor lift = null;
 
     public WebcamName webcam = null;
 
@@ -39,35 +39,35 @@ public class ProjectUdon extends Project{
         frontleft = hwMap.dcMotor.get("frontleft"); //port e2
         backright = hwMap.dcMotor.get("backright"); //port e1
         backleft = hwMap.dcMotor.get("backleft"); //port e3
-        roller = hwMap.dcMotor.get("roller"); //port c3
-        lift = hwMap.dcMotor.get("lift"); //port c0
-
-        rollerSwitch = hwMap.digitalChannel.get("rollerSwitch"); // digital device c0.1
+//        roller = hwMap.dcMotor.get("roller"); //port c3
+//        lift = hwMap.dcMotor.get("lift"); //port c0
+//
+//        rollerSwitch = hwMap.digitalChannel.get("rollerSwitch"); // digital device c0.1
 
         //Setup Motor directions and Encoder settings
         frontright.setDirection(DcMotor.Direction.REVERSE);
         frontleft.setDirection(DcMotor.Direction.FORWARD);
         backright.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.FORWARD);
-        roller.setDirection(DcMotor.Direction.REVERSE);
-        lift.setDirection(DcMotor.Direction.FORWARD);
+//        roller.setDirection(DcMotor.Direction.REVERSE);
+//        lift.setDirection(DcMotor.Direction.FORWARD);
 
         frontright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        roller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        roller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        roller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //2M Distance Sensor
-        distance = hwMap.get(DistanceSensor.class, "distance");
+//        roller.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        //2M Distance Sensor
+//        distance = hwMap.get(DistanceSensor.class, "distance");
 
         //IMU
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -90,8 +90,8 @@ public class ProjectUdon extends Project{
         frontleft.setPower(0);
         backright.setPower(0);
         backleft.setPower(0);
-        roller.setPower(0);
-        lift.setPower(0);
+//        roller.setPower(0);
+//        lift.setPower(0);
     }
 }
 
