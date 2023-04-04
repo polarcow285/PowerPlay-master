@@ -73,25 +73,24 @@ public class TestAuto extends LinearOpMode {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        //webcam.setPipeline(aprilTagDetectionPipeline);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+            @Override
+            public void onOpened()
+            {
+                webcam.setPipeline(aprilTagDetectionPipeline);
+                webcam.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
         if(cam == true){
-            aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
-
-            webcam.setPipeline(aprilTagDetectionPipeline);
-            webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-                @Override
-                public void onOpened()
-                {
-                    webcam.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
-                }
-
-                @Override
-                public void onError(int errorCode)
-                {
-
-                }
-            });
-
-
             telemetry.setMsTransmissionInterval(50);
 
             //waitForStart();
@@ -192,30 +191,13 @@ public class TestAuto extends LinearOpMode {
                 stop(1000);
             }
 
-            webcam.closeCameraDevice();
-
-            stop(2000);
+            stop(1000);
             cam = false;
         }
 
-        waitForStart();
 
-
-
-
+        //pole detection starts
         webcam.setPipeline(poleDetectionPipeline);
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(1280, 960, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-
         telemetry.setMsTransmissionInterval(50);
         stop(3000);
 
