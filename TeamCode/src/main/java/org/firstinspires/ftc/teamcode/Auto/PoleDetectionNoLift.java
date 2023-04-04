@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Projects.ProjectUdon;
 
 @Autonomous
-public class PoleDetectionNoLife extends LinearOpMode{
+public class PoleDetectionNoLift extends LinearOpMode{
     public ProjectUdon robot = new ProjectUdon();
     OpenCvCamera webcam;
     PoleDetectionPipeline poleDetectionPipeline = new PoleDetectionPipeline(telemetry);
@@ -89,6 +89,14 @@ public class PoleDetectionNoLife extends LinearOpMode{
             stop(2000);
 
         }
+
+
+
+
+        while (opModeIsActive()) {
+            sleep(20);
+        }
+
 
     }
 

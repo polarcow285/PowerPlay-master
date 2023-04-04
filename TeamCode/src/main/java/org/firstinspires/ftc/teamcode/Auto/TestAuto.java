@@ -33,6 +33,9 @@ public class TestAuto extends LinearOpMode {
     public ProjectUdon robot = new ProjectUdon();
     OpenCvCamera webcam;
     public ElapsedTime runTime = new ElapsedTime(); //sets up a timer in the program
+    PoleDetectionPipeline poleDetectionPipeline = new PoleDetectionPipeline(telemetry);
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
 
 
 
@@ -54,6 +57,8 @@ public class TestAuto extends LinearOpMode {
     int MIDDLE = 2;
     int RIGHT = 3;
 
+    boolean cam = true;
+
 
     @Override
     public void runOpMode() {
@@ -63,55 +68,72 @@ public class TestAuto extends LinearOpMode {
         robot.backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
         AprilTagDetection tagOfInterest = null;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        if(cam == true){
+            aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
-        webcam.setPipeline(aprilTagDetectionPipeline);
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
-            @Override
-            public void onOpened()
-            {
-                webcam.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode)
-            {
-
-            }
-        });
-
-
-        telemetry.setMsTransmissionInterval(50);
-
-        //waitForStart();
-
-        while (!isStarted() && !isStopRequested())
-        {
-            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
-
-            if(currentDetections.size() != 0)
-            {
-                boolean tagFound = false;
-
-                for(AprilTagDetection tag : currentDetections)
+            webcam.setPipeline(aprilTagDetectionPipeline);
+            webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener(){
+                @Override
+                public void onOpened()
                 {
-                    if(tag.id == LEFT || tag.id == MIDDLE || tag.id == RIGHT)
-                    {
-                        tagOfInterest = tag;
-                        tagFound = true;
-                        break;
-                    }
+                    webcam.startStreaming(1280,960, OpenCvCameraRotation.UPRIGHT);
                 }
 
-                if(tagFound)
+                @Override
+                public void onError(int errorCode)
                 {
-                    telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
-                    tagToTelemetry(tagOfInterest);
+
+                }
+            });
+
+
+            telemetry.setMsTransmissionInterval(50);
+
+            //waitForStart();
+
+            while (!isStarted() && !isStopRequested())
+            {
+                ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+                if(currentDetections.size() != 0)
+                {
+                    boolean tagFound = false;
+
+                    for(AprilTagDetection tag : currentDetections)
+                    {
+                        if(tag.id == LEFT || tag.id == MIDDLE || tag.id == RIGHT)
+                        {
+                            tagOfInterest = tag;
+                            tagFound = true;
+                            break;
+                        }
+                    }
+
+                    if(tagFound)
+                    {
+                        telemetry.addLine("Tag of interest is in sight!\n\nLocation data:");
+                        tagToTelemetry(tagOfInterest);
+                    }
+                    else
+                    {
+                        telemetry.addLine("Don't see tag of interest :(");
+
+                        if(tagOfInterest == null)
+                        {
+                            telemetry.addLine("(The tag has never been seen)");
+                        }
+                        else
+                        {
+                            telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
+                            tagToTelemetry(tagOfInterest);
+                        }
+                    }
+
                 }
                 else
                 {
@@ -126,28 +148,12 @@ public class TestAuto extends LinearOpMode {
                         telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
                         tagToTelemetry(tagOfInterest);
                     }
+
                 }
 
+                telemetry.update();
+                sleep(20);
             }
-            else
-            {
-                telemetry.addLine("Don't see tag of interest :(");
-
-                if(tagOfInterest == null)
-                {
-                    telemetry.addLine("(The tag has never been seen)");
-                }
-                else
-                {
-                    telemetry.addLine("\nBut we HAVE seen the tag before; last seen at:");
-                    tagToTelemetry(tagOfInterest);
-                }
-
-            }
-
-            telemetry.update();
-            sleep(20);
-        }
 
         /*
          * The START command just came in: now work off the latest snapshot acquired
@@ -155,53 +161,47 @@ public class TestAuto extends LinearOpMode {
 
          Update the telemetry*/
 
-        if(tagOfInterest != null)
-        {
-            telemetry.addLine("Tag snapshot:\n");
-            tagToTelemetry(tagOfInterest);
-        }
-        else
-        {
-            telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
-        }
-        telemetry.update();
+            if(tagOfInterest != null)
+            {
+                telemetry.addLine("Tag snapshot:\n");
+                tagToTelemetry(tagOfInterest);
+            }
+            else
+            {
+                telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
+            }
+            telemetry.update();
 
-        // Actually do something useful
-        if (tagOfInterest == null || tagOfInterest.id == LEFT)
-        {
-            //trajectory for LEFT/DEFAULT
-            // 750 counts for 1 tile
-            // 412 counts to turn 90 degrees
+            // Actually do something useful
+            if (tagOfInterest == null || tagOfInterest.id == LEFT)
+            {
+                //trajectory for LEFT/DEFAULT
+                // 750 counts for 1 tile
+                // 412 counts to turn 90 degrees
+                encoderDrive (0.2, 200,-200,200,-200);
+                stop(1000);
+            }
+            else if (tagOfInterest.id == MIDDLE) {
+                //trajectory for MIDDLE
+                encoderDrive (0.3, 200,200,200,200);
+                stop(1000);
+            }
+            else {
+                //trajectory for RIGHT
+                encoderDrive (0.3, -200,200,-200,200);
+                stop(1000);
+            }
 
-            encoderDrive (0.3, 200,200,200,200);
-            stop(500);
-//            encoderDrive (0.3, -412, 412, -412, 412);
-//            stop(500);
-//            encoderDrive (0.3, 750,750,750,750);
-//            stop(500);
-        }
-        else if (tagOfInterest.id == MIDDLE) {
-            //trajectory for MIDDLE
-            encoderDrive (0.3, 200,200,200,200);
-            stop(1000);
-        }
-        else {
-            //trajectory for RIGHT
-            encoderDrive (0.3, 200,200,200,200);
-            stop(1000);
-//            encoderDrive (0.3, 412, -412, 412, -412);
-//            stop(1000);
-//            encoderDrive (0.3, 750,750,750,750);
-//            stop(1000);
+            webcam.closeCameraDevice();
+
+            stop(2000);
+            cam = false;
         }
 
-        //aprilTagDetectionPipeline.release();
-
-        stop(2000);
-        runTime.reset();
+        waitForStart();
 
 
-        PoleDetectionPipeline poleDetectionPipeline = new PoleDetectionPipeline(telemetry);
+
 
         webcam.setPipeline(poleDetectionPipeline);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -216,14 +216,20 @@ public class TestAuto extends LinearOpMode {
             }
         });
 
+        telemetry.setMsTransmissionInterval(50);
+        stop(3000);
+
         boolean poleInRange = false;
 
         while (poleInRange == false) {
             PoleDetectionPipeline.PoleLocation elementLocation = poleDetectionPipeline.getPoleLocation();
+            //encoderDrive(0.3, 200, 200, 200, 200);
 //            if (runTime.time() > 7) {
 //
 //                break;
 //            }
+            telemetry.addData("Element Location ", elementLocation);
+            telemetry.update();
             if (elementLocation == PoleDetectionPipeline.PoleLocation.RIGHT) {
                 encoderDrive(0.25, -25, 25, -25, 25);
                 stop(1000);
@@ -236,10 +242,14 @@ public class TestAuto extends LinearOpMode {
             } else if (elementLocation == PoleDetectionPipeline.PoleLocation.CLOSE) {
                 stop(1000);
                 poleInRange = true;
-            } else {
+            } else if(elementLocation == PoleDetectionPipeline.PoleLocation.UNKNOWN){
                 encoderDrive(0.25, -25, -25, -25, -25);
                 stop(1000);
+            } else{
+                encoderDrive(0.25, -100, 100, -100, 100);
+                stop(1000);
             }
+
         }
         if(poleInRange == true){
             encoderDrive(0.25, -25, 25, -25, 25);
@@ -253,6 +263,13 @@ public class TestAuto extends LinearOpMode {
         }
 
     }
+
+
+
+
+
+
+    //drive methods
     public void encoderDrive(double speed,
                              double frontLeftCounts, double frontRightCounts, double backLeftCounts, double backRightCounts) {
         int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
@@ -290,6 +307,7 @@ public class TestAuto extends LinearOpMode {
             while (opModeIsActive() &&
                     (robot.frontleft.isBusy() && robot.frontright.isBusy() && robot.backleft.isBusy() && robot.backright.isBusy())) {
 
+                /*
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
@@ -298,6 +316,8 @@ public class TestAuto extends LinearOpMode {
                         robot.backleft.getCurrentPosition(),
                         robot.backright.getCurrentPosition());
                 telemetry.update();
+
+                 */
             }
 
             // Stop all motion;
